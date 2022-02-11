@@ -24,5 +24,15 @@ module.exports = {
     "react",
   ],
   rules: {
+    "react/display-name": 0,
+    "react/prop-types": 0,
+    quotes: [2, "double"],
+    "no-unused-vars": [2, {
+      vars: "all",
+      args: "after-used",
+      ignoreRestSiblings: false,
+      varsIgnorePattern: "_",
+      argsIgnorePattern: "_",
+    }],
   },
 }
