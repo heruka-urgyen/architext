@@ -2,16 +2,20 @@ import React, {useState} from "react"
 import {
   Editor,
   EditorState,
+  CompositeDecorator,
 } from "draft-js"
+
+import {createTagDecorator} from "./decorators"
 
 const handleChange = setEditorState => state => {
   setEditorState(state)
 }
 
-function ArchitextEditor() {
+function ArchitextEditor(props) {
+  const {tags} = props
   const editor = React.useRef(null)
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
+    EditorState.createEmpty(createTagDecorator(tags))
   )
 
   return (
