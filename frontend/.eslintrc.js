@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
+    "jest/globals": true,
   },
   extends: [
     "eslint:recommended",
@@ -22,6 +23,7 @@ module.exports = {
   },
   plugins: [
     "react",
+    "jest",
   ],
   rules: {
     "react/display-name": 0,
@@ -34,5 +36,7 @@ module.exports = {
       varsIgnorePattern: "_",
       argsIgnorePattern: "_",
     }],
+    "jest/no-disabled-tests": 1,
+    "jest/no-identical-title": 2,
   },
 }
