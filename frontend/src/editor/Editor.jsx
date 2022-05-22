@@ -2,33 +2,34 @@ import React, {useState} from "react"
 import {
   Editor,
   EditorState,
-  CompositeDecorator,
 } from "draft-js"
 
 import {createTagDecorator} from "./decorators"
+import {getLineUnderCursor} from "./getLineUnderCursor"
+import {withLineUnderCursor} from "../states/glossary"
 
-const handleChange = setEditorState => state => {
-  setEditorState(state)
+const handleChange = (setEditorState, getLineUnderCursor, setLineUnderCursor) => editorState => {
+  setEditorState(editorState)
+  setLineUnderCursor(getLineUnderCursor(editorState))
 }
 
 function ArchitextEditor(props) {
   const {tags} = props
   const editor = React.useRef(null)
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty(createTagDecorator(tags))
-  )
+  const [state, setState] = useState({
+    editorState: EditorState.createEmpty(createTagDecorator(tags)),
+    glossary: [],
+  })
 
   return (
-    <>
-      <div className="editor-wrapper">
-        <Editor
-          ref={editor}
-          editorState={editorState}
-          onChange={handleChange(setEditorState)}
-          placeholder=""
-        />
-      </div>
-    </>
+    <div className="editor-wrapper">
+      <Editor
+        ref={editor}
+        editorState={state.editorState}
+        onChange={handleChange(setState)}
+        placeholder=""
+      />
+    </div>
   )
 }
 
