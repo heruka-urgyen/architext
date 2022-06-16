@@ -3,6 +3,7 @@ import {
   Editor,
   EditorState,
 } from "draft-js"
+import {useRecoilCallback} from "recoil"
 
 import {createTagDecorator} from "./decorators"
 import {getLineUnderCursor} from "./getLineUnderCursor"
@@ -16,17 +17,19 @@ const handleChange = (setEditorState, getLineUnderCursor, setLineUnderCursor) =>
 function ArchitextEditor(props) {
   const {tags} = props
   const editor = React.useRef(null)
-  const [state, setState] = useState({
-    editorState: EditorState.createEmpty(createTagDecorator(tags)),
-    glossary: [],
-  })
+  const [editorState, setEditorState] = useState(
+    EditorState.createEmpty(createTagDecorator(tags))
+  )
+  const onChange = useRecoilCallback(({set}) => (
+    handleChange(setEditorState, getLineUnderCursor, set.bind(null, withLineUnderCursor))
+  ), [editorState])
 
   return (
     <div className="editor-wrapper">
       <Editor
         ref={editor}
-        editorState={state.editorState}
-        onChange={handleChange(setState)}
+        editorState={editorState}
+        onChange={onChange}
         placeholder=""
       />
     </div>
