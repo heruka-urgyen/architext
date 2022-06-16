@@ -1,6 +1,6 @@
 import {glossaryEndpoint} from "./endpoints"
 
-export const fetchGlossary = (text, setState) => {
+export const fetchGlossary = text => (
   fetch(glossaryEndpoint, {
     method: "post",
     mode: "cors",
@@ -11,10 +11,5 @@ export const fetchGlossary = (text, setState) => {
     body: JSON.stringify(text)
   })
   .then(x => x.json())
-  .then((res) => {
-    const {glossary} = res
-
-    setState(s => ({...s, glossary}))
-  })
-}
-
+  .then(({glossary}) => glossary)
+)
