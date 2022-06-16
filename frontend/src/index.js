@@ -1,17 +1,10 @@
 import React from "react"
 import ReactDOM from "react-dom"
 
-import {Editor} from "./editor"
-
-const editorConfig = {
-  tags: [
-    {tag: "bo", color: "#800000"},
-    {tag: "en", color: "#0000ff"},
-  ],
-}
+import {App} from "./app"
 
 ReactDOM.render(
-  React.createElement(Editor, editorConfig, null),
+  React.createElement(App, null, null),
   document.querySelector(".js-app"),
 )
 
