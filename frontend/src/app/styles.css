@@ -1,0 +1,7 @@
+.app {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+
+  height: 98vh;
+  display: flex;
+  gap: 20px;
+}

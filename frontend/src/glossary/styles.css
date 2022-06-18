@@ -1,0 +1,17 @@
+.glossary {
+  width: 50%;
+  overflow-y: scroll;
+}
+
+.term:not(:last-child) {
+  margin-right: 0.5rem;
+}
+
+.term.searchable {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.back-arrow {
+  cursor: pointer;
+}
