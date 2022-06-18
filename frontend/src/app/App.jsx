@@ -1,6 +1,8 @@
+import {Suspense} from "react"
 import {RecoilRoot} from "recoil"
 
 import {Editor} from "../editor"
+import {Glossary} from "../glossary"
 
 const editorConfig = {
   tags: [
@@ -11,9 +13,14 @@ const editorConfig = {
 
 function App() {
   return (
-    <RecoilRoot>
-      <Editor {...editorConfig} />
-    </RecoilRoot>
+    <div className="app">
+      <RecoilRoot>
+        <Editor {...editorConfig} />
+        <Suspense fallback={<div>loading</div>}>
+          <Glossary />
+        </Suspense>
+      </RecoilRoot>
+    </div>
   )
 }
 

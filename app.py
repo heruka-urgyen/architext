@@ -26,7 +26,7 @@ def glossary():
     words = t.tokenize_words_raw_lines.split(" ")
     wylie = converter.toWylie(text)
     wylie_word_list = list(filter(lambda x: x != "/", map(lambda w: w.strip(), [converter.toWylie(word) for word in words])))
-    glossary = list(map(search, wylie_word_list))
+    glossary = list(map(search, set(wylie_word_list)))
 
     return {
                 "words": words,
@@ -35,5 +35,14 @@ def glossary():
                 "glossary": glossary,
             }
 
+@architext.route("/api/term/<term>", methods=["GET"])
+def handleSearch(term):
+    return {
+                "term": term,
+                "definitions": list(map(lambda r: r[1], search(term)))
+           }
+
+
 def search(term):
     return list(filter(lambda td: td[0] == term, dictionary))
+
