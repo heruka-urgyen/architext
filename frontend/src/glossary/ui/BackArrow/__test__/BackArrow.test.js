@@ -15,7 +15,7 @@ describe("BackArrow", () => {
     const screen = render(
       <BackArrow
         onMouseDown={onMouseDown}
-      />
+      />,
     )
 
     expect(screen).toMatchSnapshot()

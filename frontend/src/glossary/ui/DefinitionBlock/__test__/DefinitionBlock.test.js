@@ -24,7 +24,7 @@ describe("DefinitionBlock", () => {
       <DefinitionBlock
         definitions={definitions}
         titleNode={titleNode}
-      />
+      />,
     )
 
     expect(screen).toMatchSnapshot()

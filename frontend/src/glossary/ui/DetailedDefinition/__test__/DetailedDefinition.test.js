@@ -19,7 +19,7 @@ describe("DetailedDefinition", () => {
         term={term}
         definitions={definitions}
         goBack={goBack}
-      />
+      />,
     )
 
     expect(screen).toMatchSnapshot()

@@ -8,8 +8,8 @@ export const fetchGlossary = text => (
       "Content-Type": "application/json",
     },
     referrerPolicy: "no-referrer",
-    body: JSON.stringify(text)
+    body: JSON.stringify(text),
   })
-  .then(x => x.json())
-  .then(({glossary}) => glossary)
+    .then(x => x.json())
+    .then(({glossary}) => glossary)
 )

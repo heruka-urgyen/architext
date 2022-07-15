@@ -43,7 +43,7 @@ describe("Glossary", () => {
     jest.spyOn(React, "useState").mockImplementation(_ => ["foo", _ => _])
 
     const {queryByText} = render(
-      <Glossary />
+      <Glossary />,
     )
 
     expect(queryByText("←")).toBeInTheDocument()
@@ -56,7 +56,7 @@ describe("Glossary", () => {
     jest.spyOn(React, "useState").mockImplementation(_ => [null, _ => _])
 
     const {queryByText} = render(
-      <Glossary />
+      <Glossary />,
     )
 
     expect(queryByText("foo")).toBeInTheDocument()

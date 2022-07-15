@@ -15,7 +15,7 @@ describe("Maybe", () => {
       <Maybe
         if={true}
         then={<Child1 />}
-      />
+      />,
     )
 
     expect(queryByText("Child 1")).toBeInTheDocument()
@@ -30,7 +30,7 @@ describe("Maybe", () => {
         if={false}
         then={<Child1 />}
         else={<Child2 />}
-      />
+      />,
     )
 
     expect(queryByText("Child 1")).not.toBeInTheDocument()
@@ -44,7 +44,7 @@ describe("Maybe", () => {
       <Maybe
         if={false}
         then={<Child1 />}
-      />
+      />,
     )
 
     expect(queryByText("Child 1")).not.toBeInTheDocument()

@@ -18,7 +18,7 @@ function ArchitextEditor(props) {
   const {tags} = props
   const editor = React.useRef(null)
   const [editorState, setEditorState] = useState(
-    EditorState.createEmpty(createTagDecorator(tags))
+    EditorState.createEmpty(createTagDecorator(tags)),
   )
   const onChange = useRecoilCallback(({set}) => (
     handleChange(setEditorState, getLineUnderCursor, set.bind(null, withLineUnderCursor))

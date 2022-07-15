@@ -3,19 +3,6 @@ import {
   CompositeDecorator,
 } from "draft-js"
 
-function createTagDecorator(tags) {
-  return new CompositeDecorator(tags.map(tag => ({
-    strategy: handleStrategy(tag.tag),
-    component: createTag(tag),
-  })))
-}
-
-function handleStrategy(tag) {
-  return (contentBlock, callback) => {
-    findWithRegex(tag, contentBlock, callback)
-  }
-}
-
 function findWithRegex(tag, contentBlock, callback) {
   const text = contentBlock.getText()
   const tagPair = `<${tag}>|</${tag}>`
@@ -25,10 +12,10 @@ function findWithRegex(tag, contentBlock, callback) {
   }
 }
 
-function createTag({tag, color}) {
-  const className = `tag tag__${tag}`
-
-  return ({children}) => React.createElement(Tag, {className, color}, children)
+function handleStrategy(tag) {
+  return (contentBlock, callback) => {
+    findWithRegex(tag, contentBlock, callback)
+  }
 }
 
 function Tag(props) {
@@ -37,6 +24,19 @@ function Tag(props) {
   return (
     <span style={{color}} className={className}>{children}</span>
   )
+}
+
+function createTag({tag, color}) {
+  const className = `tag tag__${tag}`
+
+  return ({children}) => React.createElement(Tag, {className, color}, children)
+}
+
+function createTagDecorator(tags) {
+  return new CompositeDecorator(tags.map(tag => ({
+    strategy: handleStrategy(tag.tag),
+    component: createTag(tag),
+  })))
 }
 
 export {createTagDecorator}
