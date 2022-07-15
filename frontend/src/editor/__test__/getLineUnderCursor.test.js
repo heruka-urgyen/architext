@@ -17,9 +17,9 @@ describe("getLineUnderCursor", () => {
       "༔མེས་པོའི་ཤུལ་བཞག་ལས༔",
     ]
 
-    const states = chunks.map(c =>
+    const states = chunks.map(c => (
       EditorState.createWithContent(ContentState.createFromText(c))
-    )
+    ))
 
     expect(getLineUnderCursor(states[0])).toEqual("མེས་པོའི་ཤུལ་བཞག་ལས")
     expect(getLineUnderCursor(states[1])).toEqual("མེས་པོའི་ཤུལ་བཞག་ལས")

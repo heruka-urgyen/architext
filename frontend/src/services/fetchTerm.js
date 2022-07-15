@@ -9,5 +9,5 @@ export const fetchTerm = term => (
     },
     referrerPolicy: "no-referrer",
   })
-  .then(x => x.json())
+    .then(x => x.json())
 )

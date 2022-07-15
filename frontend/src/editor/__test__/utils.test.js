@@ -42,7 +42,6 @@ describe("editor utils", () => {
   })
 
   test("getTextInSelectedBlock", () => {
-
     const selectionState = SelectionState
       .createEmpty()
       .merge({

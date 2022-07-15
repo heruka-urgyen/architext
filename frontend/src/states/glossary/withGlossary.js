@@ -10,15 +10,11 @@ export default selector({
     const {glossary} = get(glossaryAtom)
     const currentLine = get(withLineUnderCursor)
 
-    if (currentLine != "") {
+    if (currentLine !== "") {
       const res = await fetchGlossary({text: currentLine})
       return res
     }
 
     return glossary
   },
-  // set: ({set}, glossary = []) => {
-  //   set(glossaryAtom, atom => ({...atom, glossary}))
-  // },
 })
-

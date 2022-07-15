@@ -30,4 +30,3 @@ const getLineUnderCursor = editorState => (
 )
 
 export {getLineUnderCursor}
-

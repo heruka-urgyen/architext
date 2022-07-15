@@ -14,10 +14,10 @@ describe("decorators", () => {
       {tag: "en", color: "#0000ff"},
     ]
 
-    const decorator = createTagDecorator(tags)
+    const {_decorators} = createTagDecorator(tags)
     const callback = jest.fn()
 
-    decorator._decorators.forEach(({strategy}, i) => {
+    _decorators.forEach(({strategy}, i) => {
       const {tag} = tags[i]
       strategy({getText: _ => `<${tag}>`}, callback)
       strategy({getText: _ => `text<${tag}>`}, callback)
@@ -43,9 +43,9 @@ describe("decorators", () => {
     ]
 
     const getTag = tag => `tag tag__${tag}`
-    const decorator = createTagDecorator(tags)
+    const {_decorators} = createTagDecorator(tags)
 
-    decorator._decorators.forEach(({component}, i) => {
+    _decorators.forEach(({component}, i) => {
       const Component = component
       const decoratorElement = render(<Component />).container.children[0]
 

@@ -21,7 +21,7 @@ describe("DefinitionList", () => {
       <DefinitionList
         entries={entries}
         handleTitleClick={handleTitleClick}
-      />
+      />,
     )
 
     expect(screen).toMatchSnapshot()
