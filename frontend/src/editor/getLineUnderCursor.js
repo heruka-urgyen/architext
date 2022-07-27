@@ -1,4 +1,4 @@
-import {getFocusOffset, getTextInSelectedBlock} from "./utils"
+import {getFocusOffset, getTextInSelectedBlock} from "./editor-utils"
 
 const findLine = (text, offset) => {
   const chunks = [...text.matchAll(/(།|༔)?(.*?)(།|༔|\s)/g)]

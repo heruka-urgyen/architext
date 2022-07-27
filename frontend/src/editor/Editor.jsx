@@ -6,13 +6,7 @@ import {
 import {useRecoilCallback} from "recoil"
 
 import {createTagDecorator} from "./decorators"
-import {getLineUnderCursor} from "./getLineUnderCursor"
-import {withLineUnderCursor} from "../states/glossary"
-
-const handleChange = (setEditorState, getLineUnderCursor, setLineUnderCursor) => editorState => {
-  setEditorState(editorState)
-  setLineUnderCursor(getLineUnderCursor(editorState))
-}
+import {handleChange} from "./editing"
 
 function ArchitextEditor(props) {
   const {tags} = props
@@ -21,7 +15,7 @@ function ArchitextEditor(props) {
     EditorState.createEmpty(createTagDecorator(tags)),
   )
   const onChange = useRecoilCallback(({set}) => (
-    handleChange(setEditorState, getLineUnderCursor, set.bind(null, withLineUnderCursor))
+    handleChange(setEditorState, set),
   ), [editorState])
   const handleWrapperClick = useCallback(_ => editor.current.focus())
 
