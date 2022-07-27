@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useState, useCallback} from "react"
 import {
   Editor,
   EditorState,
@@ -23,9 +23,10 @@ function ArchitextEditor(props) {
   const onChange = useRecoilCallback(({set}) => (
     handleChange(setEditorState, getLineUnderCursor, set.bind(null, withLineUnderCursor))
   ), [editorState])
+  const handleWrapperClick = useCallback(_ => editor.current.focus())
 
   return (
-    <div className="editor-wrapper">
+    <div className="editor-wrapper" onClick={handleWrapperClick}>
       <Editor
         ref={editor}
         editorState={editorState}
