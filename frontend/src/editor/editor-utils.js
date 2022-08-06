@@ -1,17 +1,13 @@
-const getFocusKey = editorState => (
-  editorState.getSelection().getFocusKey()
-)
+const getFocusKey = editorState => editorState.getSelection().getFocusKey()
 
-const getFocusOffset = editorState => (
+const getFocusOffset = editorState =>
   editorState.getSelection().getFocusOffset()
-)
 
-const getTextInSelectedBlock = editorState => (
+const getTextInSelectedBlock = editorState =>
   editorState
     .getCurrentContent()
     .getBlockMap()
     .get(getFocusKey(editorState))
     .getText()
-)
 
 export {getFocusKey, getFocusOffset, getTextInSelectedBlock}

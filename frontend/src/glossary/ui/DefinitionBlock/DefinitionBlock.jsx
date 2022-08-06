@@ -3,11 +3,9 @@ function DefinitionBlock({titleNode, definitions}) {
     <>
       {titleNode}
       <ul>
-        {
-          definitions.map(def => (
-            <li key={def}>{def}</li>
-          ))
-        }
+        {definitions.map(def => (
+          <li key={def}>{def}</li>
+        ))}
       </ul>
     </>
   )

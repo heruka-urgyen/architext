@@ -3,9 +3,7 @@ import {DefinitionBlock} from "../DefinitionBlock"
 import {Title} from "../Title"
 
 function DetailedDefinition({term, definitions, goBack}) {
-  const titleNode = (
-    <Title term={term} />
-  )
+  const titleNode = <Title term={term} />
 
   return (
     <>

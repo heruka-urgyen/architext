@@ -17,9 +17,9 @@ describe("getLineUnderCursor", () => {
       "༔མེས་པོའི་ཤུལ་བཞག་ལས༔",
     ]
 
-    const states = chunks.map(c => (
-      EditorState.createWithContent(ContentState.createFromText(c))
-    ))
+    const states = chunks.map(c =>
+      EditorState.createWithContent(ContentState.createFromText(c)),
+    )
 
     expect(getLineUnderCursor(states[0])).toEqual("མེས་པོའི་ཤུལ་བཞག་ལས")
     expect(getLineUnderCursor(states[1])).toEqual("མེས་པོའི་ཤུལ་བཞག་ལས")
@@ -28,18 +28,21 @@ describe("getLineUnderCursor", () => {
   })
 
   test("get a line without special symbols based on spaces", () => {
-    const state = EditorState
-      .createWithContent(ContentState.createFromText("མེས་པོའི་ཤུལ་བཞག་ལས་ ཀློང་ཆེན་རབ་འབྱམས་ཀྱི་གསུང་འབུམ "))
+    const state = EditorState.createWithContent(
+      ContentState.createFromText(
+        "མེས་པོའི་ཤུལ་བཞག་ལས་ ཀློང་ཆེན་རབ་འབྱམས་ཀྱི་གསུང་འབུམ ",
+      ),
+    )
 
-    const selectionState = SelectionState
-      .createEmpty()
-      .merge({
-        focusKey: "test-focus-key",
-        focusOffset: 40,
-      })
+    const selectionState = SelectionState.createEmpty().merge({
+      focusKey: "test-focus-key",
+      focusOffset: 40,
+    })
 
     const stateWithSelection = EditorState.forceSelection(state, selectionState)
 
-    expect(getLineUnderCursor(stateWithSelection)).toEqual("ཀློང་ཆེན་རབ་འབྱམས་ཀྱི་གསུང་འབུམ")
+    expect(getLineUnderCursor(stateWithSelection)).toEqual(
+      "ཀློང་ཆེན་རབ་འབྱམས་ཀྱི་གསུང་འབུམ",
+    )
   })
 })

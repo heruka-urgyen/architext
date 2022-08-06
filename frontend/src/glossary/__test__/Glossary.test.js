@@ -42,9 +42,7 @@ describe("Glossary", () => {
   test("it renders main glossary view in detailed view", () => {
     jest.spyOn(React, "useState").mockImplementation(_ => ["foo", _ => _])
 
-    const {queryByText} = render(
-      <Glossary />,
-    )
+    const {queryByText} = render(<Glossary />)
 
     expect(queryByText("←")).toBeInTheDocument()
     expect(queryByText("foo")).toBeInTheDocument()
@@ -55,9 +53,7 @@ describe("Glossary", () => {
   test("it renders main glossary view in list view", () => {
     jest.spyOn(React, "useState").mockImplementation(_ => [null, _ => _])
 
-    const {queryByText} = render(
-      <Glossary />,
-    )
+    const {queryByText} = render(<Glossary />)
 
     expect(queryByText("foo")).toBeInTheDocument()
     expect(queryByText("foo definition 1")).toBeInTheDocument()

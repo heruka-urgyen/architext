@@ -12,11 +12,7 @@ describe("BackArrow", () => {
   test("matches snapshot", () => {
     const onMouseDown = jest.fn()
 
-    const screen = render(
-      <BackArrow
-        onMouseDown={onMouseDown}
-      />,
-    )
+    const screen = render(<BackArrow onMouseDown={onMouseDown} />)
 
     expect(screen).toMatchSnapshot()
   })

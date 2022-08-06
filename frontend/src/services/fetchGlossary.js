@@ -1,6 +1,6 @@
 import {glossaryEndpoint} from "./endpoints"
 
-export const fetchGlossary = text => (
+export const fetchGlossary = text =>
   fetch(glossaryEndpoint, {
     method: "post",
     mode: "cors",
@@ -12,4 +12,3 @@ export const fetchGlossary = text => (
   })
     .then(x => x.json())
     .then(({glossary}) => glossary)
-)

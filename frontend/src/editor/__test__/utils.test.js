@@ -4,21 +4,18 @@
 
 import {EditorState, ContentState, SelectionState} from "draft-js"
 
-import {getFocusKey, getFocusOffset, getTextInSelectedBlock} from "../utils"
+import {getFocusKey, getFocusOffset, getTextInSelectedBlock} from "../editor-utils"
 
 jest.mock("draft-js/lib/generateRandomKey", () => () => "test-focus-key")
 
 describe("editor utils", () => {
   test("getFocusKey", () => {
-    const selectionState = SelectionState
-      .createEmpty()
-      .merge({
-        focusKey: "test-focus-key",
-        focusOffset: 0,
-      })
+    const selectionState = SelectionState.createEmpty().merge({
+      focusKey: "test-focus-key",
+      focusOffset: 0,
+    })
 
-    const state = EditorState
-      .createWithContent(ContentState.createFromText(""))
+    const state = EditorState.createWithContent(ContentState.createFromText(""))
 
     const stateWithSelection = EditorState.forceSelection(state, selectionState)
 
@@ -26,15 +23,12 @@ describe("editor utils", () => {
   })
 
   test("getFocusOffset", () => {
-    const selectionState = SelectionState
-      .createEmpty()
-      .merge({
-        focusKey: "test-focus-key",
-        focusOffset: 3,
-      })
+    const selectionState = SelectionState.createEmpty().merge({
+      focusKey: "test-focus-key",
+      focusOffset: 3,
+    })
 
-    const state = EditorState
-      .createWithContent(ContentState.createFromText(""))
+    const state = EditorState.createWithContent(ContentState.createFromText(""))
 
     const stateWithSelection = EditorState.forceSelection(state, selectionState)
 
@@ -42,15 +36,14 @@ describe("editor utils", () => {
   })
 
   test("getTextInSelectedBlock", () => {
-    const selectionState = SelectionState
-      .createEmpty()
-      .merge({
-        focusKey: "test-focus-key",
-        focusOffset: 0,
-      })
+    const selectionState = SelectionState.createEmpty().merge({
+      focusKey: "test-focus-key",
+      focusOffset: 0,
+    })
 
-    const state = EditorState
-      .createWithContent(ContentState.createFromText("test"))
+    const state = EditorState.createWithContent(
+      ContentState.createFromText("test"),
+    )
 
     const stateWithSelection = EditorState.forceSelection(state, selectionState)
 

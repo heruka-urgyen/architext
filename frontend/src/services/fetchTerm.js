@@ -1,6 +1,6 @@
 import {termEndpoint} from "./endpoints"
 
-export const fetchTerm = term => (
+export const fetchTerm = term =>
   fetch(`${termEndpoint}/${term}`, {
     method: "get",
     mode: "cors",
@@ -8,6 +8,4 @@ export const fetchTerm = term => (
       "Content-Type": "application/json",
     },
     referrerPolicy: "no-referrer",
-  })
-    .then(x => x.json())
-)
+  }).then(x => x.json())
