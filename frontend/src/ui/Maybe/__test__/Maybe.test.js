@@ -11,12 +11,7 @@ describe("Maybe", () => {
   test("it renders `then component` when condition is true", () => {
     const Child1 = () => <h1>Child 1</h1>
 
-    const {queryByText} = render(
-      <Maybe
-        if={true}
-        then={<Child1 />}
-      />,
-    )
+    const {queryByText} = render(<Maybe if={true} then={<Child1 />} />)
 
     expect(queryByText("Child 1")).toBeInTheDocument()
   })
@@ -26,11 +21,7 @@ describe("Maybe", () => {
     const Child2 = () => <h1>Child 2</h1>
 
     const {queryByText} = render(
-      <Maybe
-        if={false}
-        then={<Child1 />}
-        else={<Child2 />}
-      />,
+      <Maybe if={false} then={<Child1 />} else={<Child2 />} />,
     )
 
     expect(queryByText("Child 1")).not.toBeInTheDocument()
@@ -40,12 +31,7 @@ describe("Maybe", () => {
   test("it renders null when there is no `else component`", () => {
     const Child1 = () => <h1>Child 1</h1>
 
-    const {queryByText} = render(
-      <Maybe
-        if={false}
-        then={<Child1 />}
-      />,
-    )
+    const {queryByText} = render(<Maybe if={false} then={<Child1 />} />)
 
     expect(queryByText("Child 1")).not.toBeInTheDocument()
   })

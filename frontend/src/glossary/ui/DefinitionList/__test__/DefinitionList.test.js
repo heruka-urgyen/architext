@@ -18,10 +18,7 @@ describe("DefinitionList", () => {
     const handleTitleClick = jest.fn(_ => _)
 
     const screen = render(
-      <DefinitionList
-        entries={entries}
-        handleTitleClick={handleTitleClick}
-      />,
+      <DefinitionList entries={entries} handleTitleClick={handleTitleClick} />,
     )
 
     expect(screen).toMatchSnapshot()

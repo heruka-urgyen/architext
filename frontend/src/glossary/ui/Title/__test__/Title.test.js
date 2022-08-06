@@ -13,9 +13,7 @@ describe("Title", () => {
     const term = "snying thig"
     const onClick = jest.fn(_ => _)
 
-    const {queryByText} = render(
-      <Title term={term} onClick={onClick} />,
-    )
+    const {queryByText} = render(<Title term={term} onClick={onClick} />)
 
     const snying = queryByText("snying")
     const thig = queryByText("thig")
@@ -33,9 +31,7 @@ describe("Title", () => {
     const term = "snying thig"
     const onClick = jest.fn()
 
-    const {queryByText} = render(
-      <Title term={term} />,
-    )
+    const {queryByText} = render(<Title term={term} />)
 
     const snying = queryByText("snying")
     const thig = queryByText("thig")
@@ -54,22 +50,16 @@ describe("Title", () => {
     const term2 = "snying  thig"
     const term3 = "snying         thig"
 
-    const screen1 = render(
-      <Title term={term1} />,
-    )
+    const screen1 = render(<Title term={term1} />)
 
     expect(screen1.queryByText("snyingthig")).toBeInTheDocument()
 
-    screen1.rerender(
-      <Title term={term2} />,
-    )
+    screen1.rerender(<Title term={term2} />)
 
     expect(screen1.queryByText("snying")).toBeInTheDocument()
     expect(screen1.queryByText("thig")).toBeInTheDocument()
 
-    screen1.rerender(
-      <Title term={term3} />,
-    )
+    screen1.rerender(<Title term={term3} />)
 
     expect(screen1.queryByText("snying")).toBeInTheDocument()
     expect(screen1.queryByText("thig")).toBeInTheDocument()

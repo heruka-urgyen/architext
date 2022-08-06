@@ -9,7 +9,10 @@ export default selector({
   get: getLineUnderCursor,
   set: ({get, set}, newLineUnderCursor = "") => {
     if (getLineUnderCursor({get}) !== newLineUnderCursor) {
-      set(glossaryAtom, atom => ({...atom, lineUnderCursor: newLineUnderCursor}))
+      set(glossaryAtom, atom => ({
+        ...atom,
+        lineUnderCursor: newLineUnderCursor,
+      }))
     }
   },
 })
