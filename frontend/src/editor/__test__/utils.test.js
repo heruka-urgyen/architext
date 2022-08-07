@@ -4,7 +4,11 @@
 
 import {EditorState, ContentState, SelectionState} from "draft-js"
 
-import {getFocusKey, getFocusOffset, getTextInSelectedBlock} from "../editor-utils"
+import {
+  getFocusKey,
+  getFocusOffset,
+  getTextInSelectedBlock,
+} from "../editor-utils"
 
 jest.mock("draft-js/lib/generateRandomKey", () => () => "test-focus-key")
 
