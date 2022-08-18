@@ -8,11 +8,15 @@ Object {
       <h3>
         <span
           class="term searchable"
+          role="link"
+          tabindex="0"
         >
           term
         </span>
         <span
           class="term searchable"
+          role="link"
+          tabindex="0"
         >
           1
         </span>
@@ -25,11 +29,15 @@ Object {
       <h3>
         <span
           class="term searchable"
+          role="link"
+          tabindex="0"
         >
           term
         </span>
         <span
           class="term searchable"
+          role="link"
+          tabindex="0"
         >
           2
         </span>
@@ -45,11 +53,15 @@ Object {
     <h3>
       <span
         class="term searchable"
+        role="link"
+        tabindex="0"
       >
         term
       </span>
       <span
         class="term searchable"
+        role="link"
+        tabindex="0"
       >
         1
       </span>
@@ -62,11 +74,15 @@ Object {
     <h3>
       <span
         class="term searchable"
+        role="link"
+        tabindex="0"
       >
         term
       </span>
       <span
         class="term searchable"
+        role="link"
+        tabindex="0"
       >
         2
       </span>

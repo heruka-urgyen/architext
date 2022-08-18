@@ -1,23 +1,16 @@
 import React, {useState, useCallback} from "react"
 import {
-  ContentBlock,
-  ContentState,
-  DefaultDraftBlockRenderMap,
-  Editor,
-  EditorState,
-  genKey,
+  ContentBlock, ContentState, Editor, EditorState, genKey,
 } from "draft-js"
-import {Map, List, Seq} from "immutable"
 import {useRecoilCallback} from "recoil"
+import {List} from "immutable"
 
-import {createTagDecorator} from "./decorators"
 import {handleChange, addBlock} from "./editing"
-import {getSelectedBlock, getBlockMap} from "./editor-utils"
+import {getSelectedBlock} from "./editor-utils"
 import {blockLanguages} from "./constants"
 import {keybindings} from "./keybindings"
 
-function ArchitextEditor(props) {
-  const {tags} = props
+function ArchitextEditor() {
   const editor = React.useRef(null)
   const [editorState, setEditorState] = useState(
     EditorState.createWithContent(
@@ -38,7 +31,7 @@ function ArchitextEditor(props) {
     ({set}) => handleChange(setEditorState, set),
     [editorState],
   )
-  const handleWrapperClick = useCallback(_ => editor.current.focus())
+  const handleWrapperInteration = useCallback(_ => editor.current.focus(), [])
 
   const handleKeyCommand = command => {
     const addBlock1 = addBlock({editorState, setEditorState})
@@ -77,7 +70,13 @@ function ArchitextEditor(props) {
   }
 
   return (
-    <div className="editor-wrapper" onClick={handleWrapperClick}>
+    <div
+      className="editor-wrapper"
+      role="textbox"
+      tabIndex="0"
+      onKeyDown={handleWrapperInteration}
+      onClick={handleWrapperInteration}
+    >
       <Editor
         ref={editor}
         editorState={editorState}

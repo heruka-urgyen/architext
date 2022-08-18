@@ -5,7 +5,7 @@
   "scripts": {
     "build": "rimraf '../static' && parcel build src/index.html --dist-dir ../static",
     "format": "prettier --config ./.prettier.js -w src",
-    "lint": "eslint src",
+    "lint": "eslint src --fix",
     "start": "parcel src/index.html",
     "test": "jest",
     "test-watch": "jest --watchAll"

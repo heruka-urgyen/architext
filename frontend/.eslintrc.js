@@ -13,6 +13,9 @@ module.exports = {
     "plugin:jsx-a11y/recommended",
     "airbnb-base",
   ],
+  overrides: [{
+    files: ["*.jsx", "*.js"],
+  }],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -23,6 +26,11 @@ module.exports = {
   settings: {
     react: {
       version: "detect",
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+      },
     },
   },
   plugins: [
