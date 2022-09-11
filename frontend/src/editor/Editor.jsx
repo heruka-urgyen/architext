@@ -5,12 +5,36 @@ import {
 import {useRecoilCallback} from "recoil"
 import {List} from "immutable"
 
-import {handleChange, addBlock} from "./editing"
-import {getSelectedBlock} from "./editor-utils"
+import {LanguageBlock} from "./LanguageBlock"
+import {Toolbar} from "./Toolbar"
+import {handleChange, handlePastedText, handleKeyCommand} from "./editing"
 import {blockLanguages} from "./constants"
 import {keybindings} from "./keybindings"
 
-function ArchitextEditor() {
+const renderBlock = blockConfig => block => {
+  const {language} = block.getData()
+
+  if (language != null) {
+    return {
+      component: LanguageBlock,
+      props: blockConfig.find(x => x.language === language),
+    }
+  }
+
+  return null
+}
+
+const styleBlock = blockLanguages => block => {
+  const {language} = block.getData()
+
+  if (blockLanguages[language] != null) {
+    return `block block__${language}`
+  }
+
+  return "block"
+}
+
+function ArchitextEditor({editorConfig}) {
   const editor = React.useRef(null)
   const [editorState, setEditorState] = useState(
     EditorState.createWithContent(
@@ -31,43 +55,10 @@ function ArchitextEditor() {
     ({set}) => handleChange(setEditorState, set),
     [editorState],
   )
-  const handleWrapperInteration = useCallback(_ => editor.current.focus(), [])
-
-  const handleKeyCommand = command => {
-    const addBlock1 = addBlock({editorState, setEditorState})
-
-    if (command === "add-language-block") {
-      const selectedBlock = getSelectedBlock(editorState)
-      const {language} = selectedBlock.getData()
-
-      if (language === blockLanguages.bo) {
-        addBlock1({language: blockLanguages.en})
-      }
-
-      if (language === blockLanguages.en) {
-        addBlock1({language: blockLanguages.bo})
-      }
-
-      return "handled"
-    }
-
-    if (command === "add-block") {
-      const selectedBlock = getSelectedBlock(editorState)
-      const {language} = selectedBlock.getData()
-
-      if (language === blockLanguages.bo) {
-        addBlock1({language: blockLanguages.bo})
-      }
-
-      if (language === blockLanguages.en) {
-        addBlock1({language: blockLanguages.en})
-      }
-
-      return "handled"
-    }
-
-    return "not-handled"
-  }
+  const handleWrapperInteration = useCallback(
+    _ => setTimeout(_ => editor.current.focus(), 0),
+    [],
+  )
 
   return (
     <div
@@ -77,11 +68,19 @@ function ArchitextEditor() {
       onKeyDown={handleWrapperInteration}
       onClick={handleWrapperInteration}
     >
+      <Toolbar
+        editorConfig={editorConfig}
+        editorState={editorState}
+        setEditorState={setEditorState}
+      />
       <Editor
         ref={editor}
+        blockStyleFn={styleBlock(blockLanguages)}
+        blockRendererFn={renderBlock(editorConfig.blockConfig)}
         editorState={editorState}
         onChange={onChange}
-        handleKeyCommand={handleKeyCommand}
+        handlePastedText={handlePastedText(setEditorState)}
+        handleKeyCommand={handleKeyCommand({editorState, setEditorState})}
         keyBindingFn={keybindings}
         placeholder=""
       />

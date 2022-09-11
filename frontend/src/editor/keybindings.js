@@ -2,7 +2,7 @@ import {getDefaultKeyBinding, KeyBindingUtil} from "draft-js"
 
 const {hasCommandModifier} = KeyBindingUtil
 
-const keybindings = e => {
+export const keybindings = e => {
   if (e.keyCode === 13) {
     if (hasCommandModifier(e)) {
       return "add-language-block"
@@ -13,5 +13,3 @@ const keybindings = e => {
 
   return getDefaultKeyBinding(e)
 }
-
-export {keybindings}

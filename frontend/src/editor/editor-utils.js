@@ -1,14 +1,16 @@
-const getFocusKey = editorState => editorState.getSelection().getFocusKey()
+export const getFocusKey = editorState =>
+  editorState.getSelection().getFocusKey()
 
-const getFocusOffset = editorState =>
+export const getFocusOffset = editorState =>
   editorState.getSelection().getFocusOffset()
 
-const getBlockMap = editorState => editorState.getCurrentContent().getBlockMap()
+export const getBlockMap = editorState =>
+  editorState.getCurrentContent().getBlockMap()
 
-const getSelectedBlock = editorState =>
+export const getSelectedBlock = editorState =>
   getBlockMap(editorState).get(getFocusKey(editorState))
 
-const getTextInSelectedBlock = editorState =>
+export const getTextInSelectedBlock = editorState =>
   getSelectedBlock(editorState).getText()
 
 const findLine = (text, offset) => {
@@ -39,14 +41,5 @@ const findLine = (text, offset) => {
   return lines.res
 }
 
-const getLineUnderCursor = editorState =>
+export const getLineUnderCursor = editorState =>
   findLine(getTextInSelectedBlock(editorState), getFocusOffset(editorState))
-
-export {
-  getFocusKey,
-  getFocusOffset,
-  getBlockMap,
-  getSelectedBlock,
-  getTextInSelectedBlock,
-  getLineUnderCursor,
-}
