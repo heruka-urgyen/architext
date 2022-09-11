@@ -1,14 +1,24 @@
-import {ContentBlock, EditorState, genKey} from "draft-js"
-import {getSelectedBlock, getBlockMap, getLineUnderCursor} from "./editor-utils"
+import {
+  ContentBlock, EditorState, genKey, CharacterMetadata,
+} from "draft-js"
+
+import {List} from "immutable"
+import {
+  getSelectedBlock,
+  getBlockMap,
+  getLineUnderCursor,
+  getFocusKey,
+} from "./editor-utils"
+import {blockLanguages} from "./constants"
 
 import {withLineUnderCursor} from "../states/glossary"
 
-const handleChange = (setEditorState, setRecoilState) => editorState => {
+export const handleChange = (setEditorState, setRecoilState) => editorState => {
   setEditorState(editorState)
   setRecoilState(withLineUnderCursor, getLineUnderCursor(editorState))
 }
 
-const addBlock = states => data => {
+export const addBlock = states => data => {
   const {editorState, setEditorState} = states
 
   const selection = editorState.getSelection()
@@ -60,4 +70,84 @@ const addBlock = states => data => {
   )
 }
 
-export {handleChange, addBlock}
+export const handlePastedText = setEditorState => (text, _, editorState) => {
+  const selection = editorState.getSelection()
+  const blockMap = getBlockMap(editorState)
+  const currentContent = editorState.getCurrentContent()
+  const updatedContent = currentContent.merge({
+    blockMap: blockMap
+      .setIn([getFocusKey(editorState), "text"], text)
+      .setIn(
+        [getFocusKey(editorState), "characterList"],
+        List(text.split("").map(_ => CharacterMetadata.create())),
+      ),
+    selectionBefore: selection,
+    selectionAfter: selection,
+  })
+
+  setEditorState(EditorState.push(editorState, updatedContent, "paste text"))
+
+  return true
+}
+
+export const handleKeyCommand = ({editorState, setEditorState}) =>
+  command => {
+    const setLanguageForBlock = ({caseBo, caseEn}) => {
+      const addBlock1 = addBlock({editorState, setEditorState})
+      const selectedBlock = getSelectedBlock(editorState)
+      const {language} = selectedBlock.getData()
+
+      if (language === blockLanguages.bo) {
+        addBlock1(caseBo)
+      }
+
+      if (language === blockLanguages.en) {
+        addBlock1(caseEn)
+      }
+    }
+
+    if (command === "add-language-block") {
+      setLanguageForBlock({
+        caseBo: {language: blockLanguages.en},
+        caseEn: {language: blockLanguages.bo},
+      })
+      return "handled"
+    }
+
+    if (command === "add-block") {
+      setLanguageForBlock({
+        caseBo: {language: blockLanguages.bo},
+        caseEn: {language: blockLanguages.en},
+      })
+      return "handled"
+    }
+
+    return "not-handled"
+  }
+
+export const changeBlockLanguage = ({
+  selectedBlockLanguage,
+  editorState,
+  setEditorState,
+}) => {
+  let language = "en"
+
+  if (selectedBlockLanguage === blockLanguages.en) {
+    language = "bo"
+  }
+
+  const selection = editorState.getSelection()
+  const blockMap = getBlockMap(editorState)
+  const currentContent = editorState.getCurrentContent()
+  const updatedContent = currentContent.merge({
+    blockMap: blockMap.setIn([getFocusKey(editorState), "data"], {
+      language,
+    }),
+    selectionBefore: selection,
+    selectionAfter: selection,
+  })
+
+  setEditorState(
+    EditorState.push(editorState, updatedContent, "change-block-language"),
+  )
+}

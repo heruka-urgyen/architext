@@ -1,6 +1,6 @@
 .glossary {
   width: 50%;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .term:not(:last-child) {
