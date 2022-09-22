@@ -1,1 +1,1 @@
-export {DefinitionBlock} from "./DefinitionBlock.jsx"
+export {DefinitionBlock} from "./DefinitionBlock"

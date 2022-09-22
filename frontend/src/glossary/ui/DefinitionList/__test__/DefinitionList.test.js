@@ -6,7 +6,7 @@ import "regenerator-runtime/runtime"
 import {render} from "@testing-library/react"
 import "@testing-library/jest-dom"
 
-import {DefinitionList} from "../DefinitionList.jsx"
+import {DefinitionList} from "../DefinitionList"
 
 describe("DefinitionList", () => {
   test("matches snapshot", () => {

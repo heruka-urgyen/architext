@@ -5,7 +5,7 @@
 import {render} from "@testing-library/react"
 import "@testing-library/jest-dom"
 
-import {Maybe} from "../Maybe.jsx"
+import {Maybe} from "../Maybe"
 
 describe("Maybe", () => {
   test("it renders `then component` when condition is true", () => {

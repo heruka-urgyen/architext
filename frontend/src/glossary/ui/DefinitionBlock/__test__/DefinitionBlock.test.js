@@ -7,7 +7,7 @@ import "regenerator-runtime/runtime"
 import {render} from "@testing-library/react"
 import "@testing-library/jest-dom"
 
-import {DefinitionBlock} from "../DefinitionBlock.jsx"
+import {DefinitionBlock} from "../DefinitionBlock"
 
 describe("DefinitionBlock", () => {
   test("matches snapshot", () => {

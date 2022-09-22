@@ -1,1 +1,1 @@
-export {BackArrow} from "./BackArrow.jsx"
+export {BackArrow} from "./BackArrow"

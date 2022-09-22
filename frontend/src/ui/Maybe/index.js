@@ -1,1 +1,1 @@
-export {Maybe} from "./Maybe.jsx"
+export {Maybe} from "./Maybe"
