@@ -1,1 +1,1 @@
-export {DefinitionList} from "./DefinitionList.jsx"
+export {DefinitionList} from "./DefinitionList"

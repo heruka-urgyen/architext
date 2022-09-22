@@ -6,7 +6,7 @@ import "regenerator-runtime/runtime"
 import {fireEvent, render} from "@testing-library/react"
 import "@testing-library/jest-dom"
 
-import {Title} from "../Title.jsx"
+import {Title} from "../Title"
 
 describe("Title", () => {
   test("it renders searchable title", () => {

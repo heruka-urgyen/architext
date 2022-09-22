@@ -7,7 +7,7 @@ import "regenerator-runtime/runtime"
 import {render} from "@testing-library/react"
 import "@testing-library/jest-dom"
 
-import {Glossary} from "../Glossary.jsx"
+import {Glossary} from "../Glossary"
 
 jest.mock("recoil", () => {
   const originalModule = jest.requireActual("recoil")

@@ -1,3 +1,3 @@
 import "./styles.css"
 
-export {Glossary} from "./Glossary.jsx"
+export {Glossary} from "./Glossary"

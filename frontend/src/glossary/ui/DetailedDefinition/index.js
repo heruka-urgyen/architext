@@ -1,1 +1,1 @@
-export {DetailedDefinition} from "./DetailedDefinition.jsx"
+export {DetailedDefinition} from "./DetailedDefinition"
