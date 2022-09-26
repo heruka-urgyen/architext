@@ -1,3 +1,5 @@
+import {entityTypes} from "./constants"
+
 export const getFocusKey = editorState =>
   editorState.getSelection().getFocusKey()
 
@@ -43,3 +45,21 @@ const findLine = (text, offset) => {
 
 export const getLineUnderCursor = editorState =>
   findLine(getTextInSelectedBlock(editorState), getFocusOffset(editorState))
+
+export const maybeGetEntity = editorState => {
+  const currentContent = editorState.getCurrentContent()
+  const selection = editorState.getSelection()
+  const block = getSelectedBlock(editorState)
+  const entityKey = block.getEntityAt(selection.get("focusOffset") - 1)
+
+  if (entityKey != null) {
+    return currentContent.getEntity(entityKey)
+  }
+
+  return {
+    getType: () => null,
+  }
+}
+
+export const isEntityCrosslink = entity =>
+  entity.getType() === entityTypes.crosslink

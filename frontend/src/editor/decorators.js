@@ -1,5 +1,7 @@
 import React from "react"
-import {CompositeDecorator} from "draft-js"
+import {EditorState, CompositeDecorator} from "draft-js"
+
+import {entityTypes} from "./constants"
 
 function findWithRegex(tag, contentBlock, callback) {
   const text = contentBlock.getText()
@@ -41,4 +43,81 @@ function createTagDecorator(tags) {
   )
 }
 
-export {createTagDecorator}
+function findCrossLinkEntities(contentBlock, callback, contentState) {
+  contentBlock.findEntityRanges(character => {
+    const entityKey = character.getEntity()
+    return (
+      entityKey !== null
+      && contentState.getEntity(entityKey).getType() === entityTypes.crosslink
+    )
+  }, callback)
+}
+
+const Crosslink = setEditorState => props => {
+  const onClick = () => {
+    const currentContent = props.contentState
+    const blockMap = currentContent.getBlockMap()
+    const selection = currentContent.getSelectionBefore()
+
+    blockMap.forEach(b =>
+      b.findEntityRanges(
+        character => {
+          const entityKey = character.getEntity()
+
+          if (entityKey) {
+            const entity = currentContent.getEntity(entityKey)
+
+            return (
+              entity.getType() === entityTypes.crosslink
+              && entity.getData().linkTo === props.entityKey
+            )
+          }
+
+          return false
+        },
+        (_, offsetEnd) => {
+          setEditorState(editorState => {
+            const newEditorState = EditorState.forceSelection(
+              editorState,
+              selection
+                .set("anchorKey", b.getKey())
+                .set("focusKey", b.getKey())
+                .set("anchorOffset", offsetEnd)
+                .set("focusOffset", offsetEnd),
+            )
+            return newEditorState
+          })
+        },
+      ),
+    )
+  }
+
+  const isOrphanLink = () =>
+    props.contentState.getEntity(props.entityKey).getData().linkTo == null
+
+  return (
+    <button
+      className="crosslink"
+      onClick={onClick}
+      style={{
+        textDecoration: isOrphanLink() ? "none" : "underline",
+        cursor: "pointer",
+        color: isOrphanLink() ? "grey" : "green",
+        borderBottom: isOrphanLink() ? "1px dashed grey" : "none",
+      }}
+      title={"go to"}
+    >
+      {props.children}
+    </button>
+  )
+}
+
+const createCrosslinkDecorator = setEditorState =>
+  new CompositeDecorator([
+    {
+      strategy: findCrossLinkEntities,
+      component: Crosslink(setEditorState),
+    },
+  ])
+
+export {createTagDecorator, createCrosslinkDecorator}
