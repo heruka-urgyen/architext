@@ -10,6 +10,8 @@
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid black;
+  display: flex;
+  gap: 10px;
 }
 
 .editor-toolbar__button {
@@ -25,4 +27,15 @@
 .block__en + :not(.block__en),
 .block__bo + :not(.block__bo) {
   margin-top: 4px;
+}
+
+.crosslink {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  font-size: initial;
 }

@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from "react"
+import React, {useState, useCallback, useEffect} from "react"
 import {
   ContentBlock, ContentState, Editor, EditorState, genKey,
 } from "draft-js"
@@ -10,6 +10,7 @@ import {Toolbar} from "./Toolbar"
 import {handleChange, handlePastedText, handleKeyCommand} from "./editing"
 import {blockLanguages} from "./constants"
 import {keybindings} from "./keybindings"
+import {createCrosslinkDecorator} from "./decorators"
 
 const renderBlock = blockConfig => block => {
   const {language} = block.getData()
@@ -51,22 +52,28 @@ function ArchitextEditor({editorConfig}) {
       ]),
     ),
   )
+  useEffect(() => {
+    setEditorState(editorState =>
+      EditorState.set(editorState, {
+        decorator: createCrosslinkDecorator(setEditorState),
+      }),
+    )
+  }, [setEditorState])
   const onChange = useRecoilCallback(
     ({set}) => handleChange(setEditorState, set),
     [editorState],
   )
-  const handleWrapperInteration = useCallback(
-    _ => setTimeout(_ => editor.current.focus(), 0),
-    [],
-  )
+  const handleWrapperInteration = useCallback(_ => {
+    setTimeout(_ => editor.current.focus(), 0)
+  }, [])
 
   return (
     <div
       className="editor-wrapper"
       role="textbox"
       tabIndex="0"
-      onKeyDown={handleWrapperInteration}
       onClick={handleWrapperInteration}
+      aria-hidden={true}
     >
       <Toolbar
         editorConfig={editorConfig}
@@ -80,7 +87,10 @@ function ArchitextEditor({editorConfig}) {
         editorState={editorState}
         onChange={onChange}
         handlePastedText={handlePastedText(setEditorState)}
-        handleKeyCommand={handleKeyCommand({editorState, setEditorState})}
+        handleKeyCommand={handleKeyCommand({
+          editorState,
+          setEditorState,
+        })}
         keyBindingFn={keybindings}
         placeholder=""
       />
