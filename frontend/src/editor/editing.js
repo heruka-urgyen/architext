@@ -1,6 +1,4 @@
-import {
-  ContentBlock, EditorState, genKey, CharacterMetadata,
-} from "draft-js"
+import {ContentBlock, EditorState, genKey, CharacterMetadata} from "draft-js"
 
 import {List} from "immutable"
 import {
@@ -90,7 +88,8 @@ export const handlePastedText = setEditorState => (text, _, editorState) => {
   return true
 }
 
-export const handleKeyCommand = ({editorState, setEditorState}) =>
+export const handleKeyCommand =
+  ({editorState, setEditorState}) =>
   command => {
     const setLanguageForBlock = ({caseBo, caseEn}) => {
       const addBlock1 = addBlock({editorState, setEditorState})

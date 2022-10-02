@@ -1,0 +1,22 @@
+.headline-button-wrapper {
+  display: flex;
+  cursor: pointer;
+}
+
+.headline-button {
+  background: #fbfbfb;
+  color: #888;
+  font-size: 18px;
+  border: 0;
+  padding: 5px;
+  vertical-align: bottom;
+}
+
+.headline-button:hover,
+.headline-button:focus {
+  background: #f3f3f3;
+}
+
+.headline-button--active {
+  color: green;
+}

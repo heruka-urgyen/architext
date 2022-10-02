@@ -47,15 +47,17 @@ function findCrossLinkEntities(contentBlock, callback, contentState) {
   contentBlock.findEntityRanges(character => {
     const entityKey = character.getEntity()
     return (
-      entityKey !== null
-      && contentState.getEntity(entityKey).getType() === entityTypes.crosslink
+      entityKey !== null &&
+      contentState.getEntity(entityKey).getType() === entityTypes.crosslink
     )
   }, callback)
 }
 
 const Crosslink = setEditorState => props => {
+  const {contentState, entityKey, children} = props
+
   const onClick = () => {
-    const currentContent = props.contentState
+    const currentContent = contentState
     const blockMap = currentContent.getBlockMap()
     const selection = currentContent.getSelectionBefore()
 
@@ -68,8 +70,8 @@ const Crosslink = setEditorState => props => {
             const entity = currentContent.getEntity(entityKey)
 
             return (
-              entity.getType() === entityTypes.crosslink
-              && entity.getData().linkTo === props.entityKey
+              entity.getType() === entityTypes.crosslink &&
+              entity.getData().linkTo === entityKey
             )
           }
 
@@ -93,7 +95,7 @@ const Crosslink = setEditorState => props => {
   }
 
   const isOrphanLink = () =>
-    props.contentState.getEntity(props.entityKey).getData().linkTo == null
+    contentState.getEntity(entityKey).getData().linkTo == null
 
   return (
     <button
@@ -105,9 +107,8 @@ const Crosslink = setEditorState => props => {
         color: isOrphanLink() ? "grey" : "green",
         borderBottom: isOrphanLink() ? "1px dashed grey" : "none",
       }}
-      title={"go to"}
     >
-      {props.children}
+      {children}
     </button>
   )
 }
