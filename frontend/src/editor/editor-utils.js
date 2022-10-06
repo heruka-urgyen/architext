@@ -1,3 +1,4 @@
+import {Modifier} from "draft-js"
 import {entityTypes} from "./constants"
 
 export const getFocusKey = editorState =>
@@ -46,11 +47,8 @@ const findLine = (text, offset) => {
 export const getLineUnderCursor = editorState =>
   findLine(getTextInSelectedBlock(editorState), getFocusOffset(editorState))
 
-export const maybeGetEntity = editorState => {
+export const maybeGetEntity = (entityKey, editorState) => {
   const currentContent = editorState.getCurrentContent()
-  const selection = editorState.getSelection()
-  const block = getSelectedBlock(editorState)
-  const entityKey = block.getEntityAt(selection.get("focusOffset") - 1)
 
   if (entityKey != null) {
     return currentContent.getEntity(entityKey)
@@ -63,3 +61,22 @@ export const maybeGetEntity = editorState => {
 
 export const isEntityCrosslink = entity =>
   entity.getType() === entityTypes.crosslink
+
+export const removeEntity = (currentContent, selection) =>
+  Modifier.applyEntity(currentContent, selection, null)
+
+export const findEntityInSelection = editorState => {
+  const selection = editorState.getSelection()
+  const block = getSelectedBlock(editorState)
+  const ao = selection.get("anchorOffset")
+  const fo = selection.get("focusOffset")
+
+  const entityKey = Array.from(
+    {length: Math.abs(ao - fo)},
+    (_, i) => Math.min(ao, fo) + i,
+  )
+    .map(i => block.getEntityAt(i))
+    .find(x => x)
+
+  return [entityKey, maybeGetEntity(entityKey, editorState)]
+}

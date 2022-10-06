@@ -7,13 +7,71 @@ import {
   getLineUnderCursor,
   getFocusKey,
 } from "./editor-utils"
-import {blockLanguages} from "./constants"
+import {blockLanguages, entityTypes} from "./constants"
 
 import {withLineUnderCursor} from "../states/glossary"
 
+const findEntityRangesInBlock = (b, currentContent) => {
+  const entityRanges = []
+  const blockKey = b.getKey()
+  let entityKey
+
+  b.findEntityRanges(
+    character => {
+      entityKey = character.getEntity()
+
+      if (entityKey != null) {
+        return (
+          currentContent.getEntity(entityKey).getType() ===
+          entityTypes.crosslink
+        )
+      }
+
+      return false
+    },
+    (offsetStart, offsetEnd) => {
+      entityRanges.push({
+        entityKey,
+        blockKey,
+        offsetStart,
+        offsetEnd,
+      })
+    },
+  )
+
+  return entityRanges
+}
+
+// FIXME: find and update entity ranges for linked entities
+const updateEntityRanges = (block, currentContent, editorState) => {
+  const entityRanges = findEntityRangesInBlock(block, currentContent)
+
+  if (entityRanges.length > 0) {
+    const newState = entityRanges.reduce((state, range) => {
+      const {entityKey, blockKey, offsetStart, offsetEnd} = range
+
+      return EditorState.set(state, {
+        currentContent: currentContent.mergeEntityData(entityKey, {
+          pos: [blockKey, offsetStart, offsetEnd],
+        }),
+      })
+    }, editorState)
+
+    return newState
+  }
+
+  return editorState
+}
+
 export const handleChange = (setEditorState, setRecoilState) => editorState => {
-  setEditorState(editorState)
   setRecoilState(withLineUnderCursor, getLineUnderCursor(editorState))
+
+  const block = getSelectedBlock(editorState)
+  const currentContent = editorState.getCurrentContent()
+
+  const newState = updateEntityRanges(block, currentContent, editorState)
+
+  setEditorState(newState)
 }
 
 export const addBlock = states => data => {
@@ -63,9 +121,13 @@ export const addBlock = states => data => {
     }),
   })
 
-  setEditorState(
-    EditorState.push(editorState, updatedContent, "add-language-block"),
+  const newState = EditorState.push(
+    updateEntityRanges(newBlock, currentContent, editorState),
+    updatedContent,
+    "add-language-block",
   )
+
+  setEditorState(newState)
 }
 
 export const handlePastedText = setEditorState => (text, _, editorState) => {

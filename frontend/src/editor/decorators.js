@@ -1,5 +1,5 @@
 import React from "react"
-import {EditorState, CompositeDecorator} from "draft-js"
+import {EditorState, CompositeDecorator, SelectionState} from "draft-js"
 
 import {entityTypes} from "./constants"
 
@@ -46,6 +46,7 @@ function createTagDecorator(tags) {
 function findCrossLinkEntities(contentBlock, callback, contentState) {
   contentBlock.findEntityRanges(character => {
     const entityKey = character.getEntity()
+
     return (
       entityKey !== null &&
       contentState.getEntity(entityKey).getType() === entityTypes.crosslink
@@ -53,71 +54,53 @@ function findCrossLinkEntities(contentBlock, callback, contentState) {
   }, callback)
 }
 
-const Crosslink = setEditorState => props => {
-  const {contentState, entityKey, children} = props
+const Crosslink = props => {
+  const {setEditorState, contentState, entityKey, children} = props
+
+  const currentContent = contentState
+  const entity = currentContent.getEntity(entityKey)
+  const entityData = entity.getData()
+  const isOrphanLink = entityData.linkTo == null
+  const pos = isOrphanLink
+    ? []
+    : currentContent.getEntity(entityData.linkTo).getData().pos
 
   const onClick = () => {
-    const currentContent = contentState
-    const blockMap = currentContent.getBlockMap()
-    const selection = currentContent.getSelectionBefore()
-
-    blockMap.forEach(b =>
-      b.findEntityRanges(
-        character => {
-          const entityKey = character.getEntity()
-
-          if (entityKey) {
-            const entity = currentContent.getEntity(entityKey)
-
-            return (
-              entity.getType() === entityTypes.crosslink &&
-              entity.getData().linkTo === entityKey
-            )
-          }
-
-          return false
-        },
-        (_, offsetEnd) => {
-          setEditorState(editorState => {
-            const newEditorState = EditorState.forceSelection(
-              editorState,
-              selection
-                .set("anchorKey", b.getKey())
-                .set("focusKey", b.getKey())
-                .set("anchorOffset", offsetEnd)
-                .set("focusOffset", offsetEnd),
-            )
-            return newEditorState
-          })
-        },
-      ),
-    )
+    setEditorState(editorState => {
+      const newEditorState = EditorState.forceSelection(
+        editorState,
+        SelectionState.createEmpty()
+          .set("anchorKey", pos[0])
+          .set("focusKey", pos[0])
+          .set("anchorOffset", pos[2])
+          .set("focusOffset", pos[2]),
+      )
+      return newEditorState
+    })
   }
 
-  const isOrphanLink = () =>
-    contentState.getEntity(entityKey).getData().linkTo == null
+  const style = {
+    textDecoration: isOrphanLink ? "none" : "underline",
+    cursor: "pointer",
+    color: isOrphanLink ? "grey" : "green",
+    borderBottom: isOrphanLink ? "1px dashed grey" : "none",
+  }
 
   return (
-    <button
-      className="crosslink"
-      onClick={onClick}
-      style={{
-        textDecoration: isOrphanLink() ? "none" : "underline",
-        cursor: "pointer",
-        color: isOrphanLink() ? "grey" : "green",
-        borderBottom: isOrphanLink() ? "1px dashed grey" : "none",
-      }}
-    >
+    <button className="crosslink" onClick={_ => onClick({})} style={style}>
       {children}
     </button>
   )
 }
 
+const createCrosslink = setEditorState => props =>
+  React.createElement(Crosslink, {...props, setEditorState}, props.children)
+
 const createCrosslinkDecorator = setEditorState =>
   new CompositeDecorator([
     {
       strategy: findCrossLinkEntities,
-      component: Crosslink(setEditorState),
+      component: createCrosslink(setEditorState),
     },
   ])
 
