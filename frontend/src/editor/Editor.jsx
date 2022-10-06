@@ -1,11 +1,5 @@
 import React, {useState, useCallback, useEffect} from "react"
-import {
-  Modifier,
-  ContentBlock,
-  ContentState,
-  EditorState,
-  genKey,
-} from "draft-js"
+import {ContentBlock, ContentState, EditorState, genKey} from "draft-js"
 import {useRecoilCallback} from "recoil"
 import {List} from "immutable"
 import Editor from "@draft-js-plugins/editor"
@@ -70,38 +64,6 @@ function ArchitextEditor({editorConfig}) {
     )
   }, [setEditorState])
 
-  const selection = editorState.getSelection()
-  const [crosslinks, setCrosslinks] = useState([])
-
-  useEffect(() => {
-    if (crosslinks[0] != null && crosslinks[1] != null) {
-      const [link1, link2] = crosslinks
-      const c2 = Modifier.applyEntity(
-        link1.content,
-        link2.selection,
-        link2.entityKey,
-      )
-
-      const c3 = c2
-        .replaceEntityData(link1.entityKey, {
-          linkTo: link2.entityKey,
-          selection: link1.selection,
-        })
-        .replaceEntityData(link2.entityKey, {
-          linkTo: link1.entityKey,
-          selection: link2.selection,
-        })
-
-      const newEditorState = EditorState.set(editorState, {
-        selection: selection.set("anchorOffset", selection.getFocusOffset()),
-        currentContent: c3,
-      })
-
-      setCrosslinks([])
-      setEditorState(newEditorState)
-    }
-  }, [crosslinks, editorState, setEditorState, selection])
-
   const [{plugins, InlineToolbar}] = useState(() => {
     const inlineToolbarPlugin = createInlineToolbarPlugin()
     const {InlineToolbar} = inlineToolbarPlugin
@@ -150,15 +112,7 @@ function ArchitextEditor({editorConfig}) {
         plugins={plugins}
         placeholder=""
       />
-      <InlineToolbar>
-        {props => (
-          <CrosslinkButton
-            crosslinks={crosslinks}
-            setCrosslinks={setCrosslinks}
-            {...props}
-          />
-        )}
-      </InlineToolbar>
+      <InlineToolbar>{props => <CrosslinkButton {...props} />}</InlineToolbar>
     </div>
   )
 }

@@ -1,123 +1,176 @@
-import {useEffect} from "react"
-import {EditorState, Modifier} from "draft-js"
+import {useState, useEffect} from "react"
+import {EditorState, Modifier, SelectionState} from "draft-js"
 import {
-  getSelectedBlock,
-  maybeGetEntity,
   isEntityCrosslink,
+  removeEntity,
+  findEntityInSelection,
 } from "../editor/editor-utils"
 import {entityTypes} from "../editor/constants"
 
-const RemoveCrosslink = props => {
-  const {getEditorState, setEditorState, onOverrideContent, setCrosslinks} =
-    props
-  const editorState = getEditorState()
-  const selection = editorState.getSelection()
-  const currentContent = editorState.getCurrentContent()
-  const block = getSelectedBlock(editorState)
-  const entityKey = block.getEntityAt(selection.get("focusOffset") - 1)
-  const entityIsCrosslink = isEntityCrosslink(maybeGetEntity(editorState))
+const addCrosslinkEntity = (content, selection) => {
+  const content1 = content.createEntity(entityTypes.crosslink, "MUTABLE", {})
+  const entityKey = content1.getLastCreatedEntityKey()
 
-  useEffect(() => {
-    if (!entityIsCrosslink) {
-      onOverrideContent(undefined)
-    }
-  }, [entityIsCrosslink, onOverrideContent])
+  const content2 = Modifier.applyEntity(content1, selection, entityKey)
 
-  return (
-    <button
-      className="headline-button"
-      onMouseDown={_ => {
-        const entityData1 = currentContent.getEntity(entityKey).getData()
-        const c1 = Modifier.applyEntity(
-          currentContent,
-          entityData1.selection,
-          null,
-        )
-
-        if (entityData1.linkTo == null) {
-          setEditorState(EditorState.set(editorState, {currentContent: c1}))
-        } else {
-          const entityData2 = currentContent
-            .getEntity(entityData1.linkTo)
-            .getData()
-          const c2 = Modifier.applyEntity(c1, entityData2.selection, null)
-
-          setEditorState(EditorState.set(editorState, {currentContent: c2}))
-        }
-
-        setCrosslinks([])
-        props.onOverrideContent(undefined)
-      }}
-    >
-      <span className="material-symbols-outlined">link_off</span>
-    </button>
-  )
+  return {entityKey, content: content2}
 }
 
-export const CrosslinkButton = props => {
+const selectCrosslink = entityData =>
+  SelectionState.createEmpty()
+    .set("anchorKey", entityData.pos[0])
+    .set("focusKey", entityData.pos[0])
+    .set("anchorOffset", entityData.pos[1])
+    .set("focusOffset", entityData.pos[2])
+    .set("isBackward", false)
+    .set("hasFocus", true)
+
+const findRemoveCrosslinks = (currentContent, entityKey) => {
+  const inner = removed => (currentContent, entityKey) => {
+    if (entityKey == null || removed.find(x => x === entityKey)) {
+      return currentContent
+    }
+
+    const entityData = currentContent.getEntity(entityKey).getData()
+    const entitySelection = selectCrosslink(entityData)
+    const contentWithoutEntity = removeEntity(currentContent, entitySelection)
+
+    return inner([...removed, entityKey])(
+      contentWithoutEntity,
+      entityData.linkTo,
+    )
+  }
+
+  return inner([])(currentContent, entityKey)
+}
+
+const removeCrosslink = props => _ => {
   const {
-    crosslinks,
-    setCrosslinks,
+    entityKey,
     getEditorState,
     setEditorState,
     onOverrideContent,
+    setOrphanLink,
   } = props
-  const editorState = getEditorState()
-  const selection = editorState.getSelection()
-  const currentContent = editorState.getCurrentContent()
-  const entityIsCrosslink = isEntityCrosslink(maybeGetEntity(editorState))
-  const getCrosslinkButtonClass = crosslinks => {
-    if (crosslinks.length === 0) {
-      return "headline-button"
-    }
 
-    return "headline-button headline-button--active"
+  const editorState = getEditorState()
+  const currentContent = editorState.getCurrentContent()
+
+  setEditorState(
+    EditorState.set(editorState, {
+      currentContent: findRemoveCrosslinks(currentContent, entityKey),
+    }),
+  )
+
+  setOrphanLink(null)
+
+  onOverrideContent(undefined)
+}
+
+const addCrosslink = props => _ => {
+  const {orphanLink, setOrphanLink, editorState, setEditorState} = props
+  const currentContent = editorState.getCurrentContent()
+  const selection = editorState.getSelection()
+
+  if (orphanLink != null) {
+    const entityData = currentContent.getEntity(orphanLink).getData()
+
+    const cl1Selection = selectCrosslink(entityData)
+
+    const cl1 = addCrosslinkEntity(
+      removeEntity(currentContent, cl1Selection),
+      cl1Selection,
+    )
+    const cl2 = addCrosslinkEntity(cl1.content, selection)
+
+    const [anchorOffset, focusOffset] = [
+      selection.getAnchorOffset(),
+      selection.getFocusOffset(),
+    ]
+
+    const newContent = cl2.content
+      .mergeEntityData(cl1.entityKey, {
+        linkTo: cl2.entityKey,
+        pos: entityData.pos,
+      })
+      .mergeEntityData(cl2.entityKey, {
+        linkTo: cl1.entityKey,
+        pos: [
+          selection.getEndKey(),
+          Math.min(anchorOffset, focusOffset),
+          Math.max(anchorOffset, focusOffset),
+        ],
+      })
+
+    setEditorState(
+      EditorState.set(editorState, {
+        selection: selection.set("anchorOffset", selection.getFocusOffset()),
+        currentContent: newContent,
+      }),
+    )
+
+    setOrphanLink(null)
+  } else {
+    const cl1 = addCrosslinkEntity(currentContent, selection)
+
+    setEditorState(
+      EditorState.set(editorState, {
+        selection: selection.set("anchorOffset", selection.getFocusOffset()),
+        currentContent: cl1.content,
+      }),
+    )
+
+    setOrphanLink(cl1.entityKey)
   }
+}
+
+const getCrosslinkButtonClass = orphanLink => {
+  if (orphanLink != null) {
+    return "headline-button"
+  }
+
+  return "headline-button headline-button--active"
+}
+
+const RemoveCrosslinkButton = props => (
+  <button className="headline-button" onMouseDown={removeCrosslink(props)}>
+    <span className="material-symbols-outlined">link_off</span>
+  </button>
+)
+
+export const CrosslinkButton = props => {
+  const {getEditorState, setEditorState, onOverrideContent} = props
+
+  const [orphanLink, setOrphanLink] = useState(undefined)
+
+  const editorState = getEditorState()
+  const [entityKey, entity] = findEntityInSelection(editorState)
+  const entityIsCrosslink = isEntityCrosslink(entity)
 
   useEffect(() => {
     if (entityIsCrosslink) {
       onOverrideContent(props => (
-        <RemoveCrosslink setCrosslinks={setCrosslinks} {...props} />
+        <RemoveCrosslinkButton
+          setOrphanLink={setOrphanLink}
+          entityKey={entityKey}
+          {...props}
+        />
       ))
     } else {
       onOverrideContent(undefined)
     }
-  }, [selection, entityIsCrosslink, onOverrideContent, setCrosslinks])
+  }, [entityIsCrosslink, onOverrideContent, setOrphanLink, entityKey])
 
   return (
     <div className="headline-button-wrapper">
       <button
-        className={getCrosslinkButtonClass(crosslinks)}
-        onMouseDown={_ => {
-          const content = currentContent.createEntity(
-            entityTypes.crosslink,
-            "MUTABLE",
-            {selection},
-          )
-          const entityKey = content.getLastCreatedEntityKey()
-
-          const newContent = Modifier.applyEntity(content, selection, entityKey)
-
-          setCrosslinks(s => {
-            s.push({
-              content: newContent,
-              selection,
-              entityKey,
-            })
-
-            return s
-          })
-
-          setEditorState(
-            EditorState.set(editorState, {
-              selection: selection.set(
-                "anchorOffset",
-                selection.getFocusOffset(),
-              ),
-              currentContent: newContent,
-            }),
-          )
-        }}
+        className={getCrosslinkButtonClass(orphanLink)}
+        onMouseDown={addCrosslink({
+          orphanLink,
+          setOrphanLink,
+          editorState,
+          setEditorState,
+        })}
       >
         <span className="material-symbols-outlined">add_link</span>
       </button>
