@@ -20,7 +20,7 @@ function Glossary() {
         then={
           <DetailedDefinition
             term={searchTerm.term}
-            definitions={searchTerm.definitions}
+            definitions={searchTerm.results}
             goBack={_ => setCurrentSearchTerm(null)}
           />
         }
