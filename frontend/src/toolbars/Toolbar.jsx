@@ -3,7 +3,9 @@ import {changeBlockLanguage} from "../editor/editing"
 import {getSelectedBlock} from "../editor/editor-utils"
 
 const ToolbarButton = props => {
-  const {style, disabled = false, onClick, children} = props
+  const {
+    style, disabled = false, onClick, children,
+  } = props
 
   return (
     <button

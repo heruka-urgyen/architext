@@ -8,10 +8,13 @@ function DetailedDefinition({term, definitions, goBack}) {
   return (
     <>
       <BackArrow onMouseDown={goBack} />
-      {definitions.map(definition =>(
+      {definitions.map(definition => (
         <>
           <h1>{definition.dictionary}</h1>
-          <DefinitionBlock titleNode={titleNode} definitions={definition.definitions} />
+          <DefinitionBlock
+            titleNode={titleNode}
+            definitions={definition.definitions}
+          />
         </>
       ))}
     </>

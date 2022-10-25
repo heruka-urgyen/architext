@@ -9,6 +9,6 @@ export default selectorFamily({
       return fetchTerm(term)
     }
 
-    return {term: "", definitions: []}
+    return {term: "", results: []}
   },
 })

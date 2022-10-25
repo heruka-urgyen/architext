@@ -1,4 +1,6 @@
-import {ContentBlock, EditorState, genKey, CharacterMetadata} from "draft-js"
+import {
+  ContentBlock, EditorState, genKey, CharacterMetadata,
+} from "draft-js"
 
 import {List} from "immutable"
 import {
@@ -22,8 +24,8 @@ const findEntityRangesInBlock = (b, currentContent) => {
 
       if (entityKey != null) {
         return (
-          currentContent.getEntity(entityKey).getType() ===
-          entityTypes.crosslink
+          currentContent.getEntity(entityKey).getType()
+          === entityTypes.crosslink
         )
       }
 
@@ -48,7 +50,9 @@ const updateEntityRanges = (block, currentContent, editorState) => {
 
   if (entityRanges.length > 0) {
     const newState = entityRanges.reduce((state, range) => {
-      const {entityKey, blockKey, offsetStart, offsetEnd} = range
+      const {
+        entityKey, blockKey, offsetStart, offsetEnd,
+      } = range
 
       return EditorState.set(state, {
         currentContent: currentContent.mergeEntityData(entityKey, {
@@ -150,8 +154,7 @@ export const handlePastedText = setEditorState => (text, _, editorState) => {
   return true
 }
 
-export const handleKeyCommand =
-  ({editorState, setEditorState}) =>
+export const handleKeyCommand = ({editorState, setEditorState}) =>
   command => {
     const setLanguageForBlock = ({caseBo, caseEn}) => {
       const addBlock1 = addBlock({editorState, setEditorState})

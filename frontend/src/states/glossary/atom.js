@@ -5,5 +5,6 @@ export default atom({
   default: {
     lineUnderCursor: "",
     glossary: [],
+    dictionaries: [],
   },
 })
