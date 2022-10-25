@@ -2,8 +2,8 @@ import {DefinitionBlock} from "../DefinitionBlock"
 import {Title} from "../Title"
 
 function DefinitionList({entries, handleTitleClick}) {
-  return entries.map(entry =>
-    <>
+  return entries.map(entry => (
+    <div key={entry.dictionary}>
       <h1>{entry.dictionary}</h1>
 
       {entry.definitions.map(terms => {
@@ -23,9 +23,8 @@ function DefinitionList({entries, handleTitleClick}) {
           />
         )
       })}
-    </>
-  )
-
+    </div>
+  ))
 }
 
 export {DefinitionList}
