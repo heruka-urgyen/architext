@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "start": "nodemon src/index.js",
-    "lint": "eslint src --fix"
+    "start": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -14,12 +13,9 @@
     "node": "17.9.1"
   },
   "devDependencies": {
-    "eslint": "^8.27.0",
-    "eslint-plugin-node": "^11.1.0",
     "nodemon": "^2.0.20"
   },
   "dependencies": {
-    "@fastify/cors": "^8.1.1",
     "fastify": "^4.9.2"
   }
 }
