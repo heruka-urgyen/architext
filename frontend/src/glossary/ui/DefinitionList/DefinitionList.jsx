@@ -10,9 +10,7 @@ function DefinitionList({entries, handleTitleClick}) {
         if (terms.length === 0) {
           return null
         }
-
-        const [[term]] = terms
-        const definitions = terms.map(([_, def]) => def)
+        const [term, ...definitions] = terms
         const titleNode = <Title term={term} onClick={handleTitleClick} />
 
         return (

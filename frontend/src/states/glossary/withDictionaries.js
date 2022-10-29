@@ -36,7 +36,7 @@ export default selector({
       return {
         ...atom,
         dictionaries: atom.dictionaries.map(d =>
-          (d.dictionary === dictionary ? {...d, selected} : d),
+          d.dictionary === dictionary ? {...d, selected} : d,
         ),
       }
     })
