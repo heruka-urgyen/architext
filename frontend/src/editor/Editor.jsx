@@ -1,7 +1,5 @@
 import React, {useState, useCallback, useEffect} from "react"
-import {
-  ContentBlock, ContentState, EditorState, genKey,
-} from "draft-js"
+import {ContentBlock, ContentState, EditorState, genKey} from "draft-js"
 import {useRecoilCallback} from "recoil"
 import {List} from "immutable"
 import Editor from "@draft-js-plugins/editor"

@@ -68,9 +68,7 @@ const removeCrosslink = props => _ => {
 }
 
 const addCrosslink = props => _ => {
-  const {
-    orphanLink, setOrphanLink, editorState, setEditorState,
-  } = props
+  const {orphanLink, setOrphanLink, editorState, setEditorState} = props
   const currentContent = editorState.getCurrentContent()
   const selection = editorState.getSelection()
 
