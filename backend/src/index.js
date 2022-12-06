@@ -120,6 +120,61 @@ fastify.route({
   }
 })
 
+fastify.route({
+  method: "GET",
+  url: "/api/dictionaries",
+  schema: {
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          dictionaries: {type: "object"},
+        }
+      }
+    }
+  },
+  handler: async (request, reply) => {
+    let res = []
+    for (let d of dictionaryStore.values()) {
+      res.push({name: d.filename, selected: d.enabled})
+    }
+
+    reply.send(JSON.stringify({dictionaries: res}))
+  }
+})
+
+fastify.route({
+  method: "POST",
+  url: "/api/toggle_dictionaries",
+  schema: {
+    body: {
+      name: {type: "string"},
+      enabled: {type: "boolean"},
+    },
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          name: {type: "string"},
+          enabled: {type: "boolean"},
+        }
+      }
+    }
+  },
+  handler: async (request, reply) => {
+    const {name, selected} = request.body
+
+    dictionaryStore = dictionaryStore.set(name, {...dictionaryStore.get(name), enabled: selected})
+
+    let res = []
+    for (let d of dictionaryStore.values()) {
+      res.push({name: d.filename, selected: d.enabled})
+    }
+
+    reply.send(JSON.stringify({dictionaries: res}))
+  }
+})
+
 fastify.listen({ port: 3000 }, async (err) => {
   await initializeDictionaryStore()
 
