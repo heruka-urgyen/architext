@@ -22,7 +22,7 @@ function GlossaryData() {
       then={
         <DetailedDefinition
           term={searchTerm.term}
-          definitions={searchTerm.results}
+          definitions={entries}
           goBack={_ => setCurrentSearchTerm(null)}
         />
       }

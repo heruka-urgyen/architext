@@ -48,14 +48,16 @@ function findCrossLinkEntities(contentBlock, callback, contentState) {
     const entityKey = character.getEntity()
 
     return (
-      entityKey !== null &&
-      contentState.getEntity(entityKey).getType() === entityTypes.crosslink
+      entityKey !== null
+      && contentState.getEntity(entityKey).getType() === entityTypes.crosslink
     )
   }, callback)
 }
 
 const Crosslink = props => {
-  const {setEditorState, contentState, entityKey, children} = props
+  const {
+    setEditorState, contentState, entityKey, children,
+  } = props
 
   const currentContent = contentState
   const entity = currentContent.getEntity(entityKey)

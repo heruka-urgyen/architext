@@ -16,27 +16,7 @@ export default selector({
 
     return dictionaries
   },
-  set: ({get, set}, [dictionary, selected]) => {
-    set(glossaryAtom, atom => {
-      const {dictionaries} = atom
-      const glossary = get(withGlossary)
-
-      if (dictionaries.length === 0) {
-        return {
-          ...atom,
-          dictionaries: glossary.map(x => ({
-            ...x,
-            selected: x.dictionary === dictionary ? selected : true,
-          })),
-        }
-      }
-
-      return {
-        ...atom,
-        dictionaries: atom.dictionaries.map(d =>
-          d.dictionary === dictionary ? {...d, selected} : d,
-        ),
-      }
-    })
+  set: ({set}, {dictionaries}) => {
+    set(glossaryAtom, atom => ({...atom, dictionaries}))
   },
 })
