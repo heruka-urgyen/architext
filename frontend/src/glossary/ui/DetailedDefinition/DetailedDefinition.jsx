@@ -8,14 +8,14 @@ function DetailedDefinition({term, definitions, goBack}) {
   return (
     <>
       <BackArrow onMouseDown={goBack} />
-      {definitions.map(definition => (
-        <>
+      {definitions.filter(x => Array.isArray(x.definitions)).map(definition => (
+        <div key={definition.dictionary}>
           <h1>{definition.dictionary}</h1>
           <DefinitionBlock
             titleNode={titleNode}
             definitions={definition.definitions}
           />
-        </>
+        </div>
       ))}
     </>
   )

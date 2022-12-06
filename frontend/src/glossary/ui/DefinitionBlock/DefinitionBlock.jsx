@@ -1,4 +1,4 @@
-function DefinitionBlock({titleNode, definitions}) {
+function DefinitionBlock({titleNode, definitions = []}) {
   return (
     <>
       {titleNode}
