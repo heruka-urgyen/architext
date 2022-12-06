@@ -73,6 +73,37 @@ const initializeDictionaryStore = async () => {
   }))
 }
 
+function getDefinitions(dictionary, terms) {
+  if (Array.isArray(terms)) {
+    return terms.reduce((acc, term) => {
+      const definitions = dictionary.content.get(term)
+
+      if (definitions != null) {
+        acc.push([term, definitions])
+      }
+
+      return acc
+    }, [])
+  }
+
+  return dictionary.content.get(terms)
+}
+
+function findInSelectedDictionaries(terms) {
+  const result = []
+
+  for (let d of dictionaryStore.values()) {
+    if (d.enabled) {
+      result.push({
+        dictionary: d.filename,
+        definitions: getDefinitions(d, terms)
+      })
+    }
+  }
+
+  return result
+}
+
 fastify.route({
   method: "POST",
   url: "/api/glossary",
@@ -97,24 +128,7 @@ fastify.route({
 
     const {wylieWordList} = await sendBotokServiceRequest(options, JSON.stringify(request.body))
     const wwl = new Set(wylieWordList)
-    let result = []
-
-    for (let d of dictionaryStore.values()) {
-      if (d.enabled) {
-        result.push({
-          dictionary: d.filename,
-          definitions: [...wwl.values()].reduce((acc, term) => {
-            const definitions = d.content.get(term)
-
-            if (definitions != null) {
-              acc.push([term, definitions])
-            }
-
-            return acc
-          }, [])
-        })
-      }
-    }
+    const result = findInSelectedDictionaries([...wwl.values()])
 
     reply.send({glossary: result})
   }
@@ -172,6 +186,31 @@ fastify.route({
     }
 
     reply.send(JSON.stringify({dictionaries: res}))
+  }
+})
+
+fastify.route({
+  method: "GET",
+  url: "/api/term/:term",
+  schema: {
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          term: {type: "string"},
+          results: {type: "array"},
+        }
+      }
+    }
+  },
+  handler: async (request, reply) => {
+    const {params: {term}} = request
+    const results = findInSelectedDictionaries(term)
+
+    reply.send({
+      term,
+      results,
+    })
   }
 })
 
