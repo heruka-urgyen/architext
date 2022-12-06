@@ -1,7 +1,10 @@
 import {useState} from "react"
-import {useRecoilValue, useRecoilCallback} from "recoil"
+import {
+  useRecoilValue, useRecoilCallback,
+} from "recoil"
 import {Maybe} from "../../../ui/Maybe"
 import {withDictionaries} from "../../../states/glossary"
+import {selectDictionaries as sd} from "../../../services/toggleDictionaries"
 
 const Checkbox = ({value, checked, onChange}) => (
   <label>
@@ -17,14 +20,15 @@ const Checkbox = ({value, checked, onChange}) => (
 
 function DictionarySelector() {
   const [selectorVisible, toggleSelectorVisible] = useState(false)
-
   const dictionaries = useRecoilValue(withDictionaries)
 
   const selectDictionaries = useRecoilCallback(
     ({set}) =>
-      args =>
-        set(withDictionaries, args),
-    [dictionaries],
+      async args => {
+        const res = await sd(args)
+        set(withDictionaries, res)
+      },
+    [],
   )
 
   return (
@@ -32,7 +36,7 @@ function DictionarySelector() {
       <Maybe
         if={dictionaries.length > 0}
         then={
-          <button onClick={_ => toggleSelectorVisible(s => !s)}>
+          <button onClick={_ => toggleSelectorVisible(s => !s)} style={{height: "30px"}}>
             Select dictionaries
           </button>
         }
@@ -41,12 +45,12 @@ function DictionarySelector() {
         if={selectorVisible}
         then={
           <ul style={{listStyle: "none"}}>
-            {dictionaries.map(({dictionary, selected}) => (
-              <li key={dictionary}>
+            {dictionaries.map(({name, selected}) => (
+              <li key={name}>
                 <Checkbox
-                  value={dictionary}
+                  value={name}
                   checked={selected}
-                  onChange={_ => selectDictionaries([dictionary, !selected])}
+                  onChange={_ => selectDictionaries({name, selected: !selected})}
                 />
               </li>
             ))}

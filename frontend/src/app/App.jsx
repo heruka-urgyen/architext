@@ -1,4 +1,3 @@
-import {Suspense} from "react"
 import {RecoilRoot} from "recoil"
 
 import {Editor} from "../editor"
@@ -17,9 +16,7 @@ function App() {
     <div className="app">
       <RecoilRoot>
         <Editor editorConfig={editorConfig} />
-        <Suspense fallback={<div>loading</div>}>
-          <Glossary />
-        </Suspense>
+        <Glossary />
       </RecoilRoot>
     </div>
   )
