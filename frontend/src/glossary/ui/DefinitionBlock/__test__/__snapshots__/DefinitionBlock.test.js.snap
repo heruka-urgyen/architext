@@ -8,40 +8,44 @@ Object {
       <h1>
         term
       </h1>
-      <ul>
+      <ol
+        class="terms"
+      >
         <li>
-          def 1
+          <p>
+            def
+            1
+          </p>
         </li>
         <li>
-          def 2
+          <p>
+            def
+            2
+          </p>
         </li>
-        <li>
-          def 3
-        </li>
-        <li>
-          def 4
-        </li>
-      </ul>
+      </ol>
     </div>
   </body>,
   "container": <div>
     <h1>
       term
     </h1>
-    <ul>
+    <ol
+      class="terms"
+    >
       <li>
-        def 1
+        <p>
+          def
+          1
+        </p>
       </li>
       <li>
-        def 2
+        <p>
+          def
+          2
+        </p>
       </li>
-      <li>
-        def 3
-      </li>
-      <li>
-        def 4
-      </li>
-    </ul>
+    </ol>
   </div>,
   "debug": [Function],
   "findAllByAltText": [Function],

@@ -16,7 +16,7 @@ function Title({term, onClick}) {
           tabIndex={0}
           className={`term${searchable ? " searchable" : ""}`}
           onMouseDown={handleAction(syllable)}
-          onTouch={handleAction(syllable)}
+          onKeyPress={handleAction(syllable)}
         >
           {syllable}
         </span>

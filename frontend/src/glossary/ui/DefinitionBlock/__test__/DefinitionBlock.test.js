@@ -11,7 +11,20 @@ import {DefinitionBlock} from "../DefinitionBlock"
 
 describe("DefinitionBlock", () => {
   test("matches snapshot", () => {
-    const definitions = ["def 1", "def 2", "def 3", "def 4"]
+    const definitions = [
+      [
+        [
+          {type: "definition", token: "def"},
+          {type: "none", token: "1"},
+        ],
+      ],
+      [
+        [
+          {type: "definition", token: "def"},
+          {type: "none", token: "2"},
+        ],
+      ],
+    ]
 
     const titleNode = React.createElement("h1", null, "term")
 

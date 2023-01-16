@@ -21,24 +21,67 @@ jest.mock("recoil", () => {
           {
             dictionary: "dictionary 1",
             definitions: [
-              ["foo", ["foo definition 1", "foo definition 2"]],
-            ]
+              [
+                "foo",
+                [
+                  [
+                    [
+                      {token: "foo definition 1", type: "definition"},
+                      {token: "foo definition 2", type: "definition"},
+                    ],
+                  ],
+                ],
+              ],
+            ],
           },
           {
             dictionary: "dictionary 2",
             definitions: [
-              ["bar", ["bar definition 1", "bar definition 2"]],
-            ]
+              [
+                "bar",
+                [
+                  [
+                    [
+                      {token: "bar definition 1", type: "definition"},
+                      {token: "bar definition 2", type: "definition"},
+                    ],
+                  ],
+                ],
+              ],
+            ],
           },
         ]
       }
 
       if (selector.key.includes("withSearchTerm")) {
-        return {term: "foo", results: [{definitions: ["foo definition 1", "foo definition 2"]}]}
+        return {
+          term: "baz",
+          results: [
+            {
+              dictionary: "dictionary 3",
+              definitions: [
+                [
+                  "baz",
+                  [
+                    [
+                      [
+                        {token: "baz definition 1", type: "definition"},
+                        {token: "baz definition 2", type: "definition"},
+                      ],
+                    ],
+                  ],
+                ],
+              ],
+            },
+          ],
+        }
       }
 
       if (selector.key.includes("withDictionaries")) {
-        return ["dictionary 1", "dictionary 2"]
+        return [
+          {name: "dictionary 1", selected: true},
+          {name: "dictionary 2", selected: false},
+        ]
       }
 
       return null
@@ -48,14 +91,14 @@ jest.mock("recoil", () => {
 
 describe("Glossary", () => {
   test("it renders main glossary view in detailed view", () => {
-    jest.spyOn(React, "useState").mockImplementation(_ => ["foo", _ => _])
+    jest.spyOn(React, "useState").mockImplementation(_ => ["baz", _ => _])
 
     const {queryByText} = render(<Glossary />)
 
     expect(queryByText("←")).toBeInTheDocument()
-    expect(queryByText("foo")).toBeInTheDocument()
-    expect(queryByText(/definition 1/)).toBeInTheDocument()
-    expect(queryByText(/definition 2/)).toBeInTheDocument()
+    expect(queryByText("baz")).toBeInTheDocument()
+    expect(queryByText(/baz definition 1/)).toBeInTheDocument()
+    expect(queryByText(/baz definition 2/)).toBeInTheDocument()
   })
 
   test("it renders main glossary view in list view", () => {
