@@ -18,19 +18,27 @@ jest.mock("recoil", () => {
     useRecoilValue: selector => {
       if (selector.key.includes("withGlossary")) {
         return [
-          [
-            ["foo", "foo definition 1"],
-            ["foo", "foo definition 2"],
-          ],
-          [
-            ["bar", "bar definition 1"],
-            ["bar", "bar definition 2"],
-          ],
+          {
+            dictionary: "dictionary 1",
+            definitions: [
+              ["foo", ["foo definition 1", "foo definition 2"]],
+            ]
+          },
+          {
+            dictionary: "dictionary 2",
+            definitions: [
+              ["bar", ["bar definition 1", "bar definition 2"]],
+            ]
+          },
         ]
       }
 
       if (selector.key.includes("withSearchTerm")) {
-        return {term: "foo", definitions: ["definition 1", "definition 2"]}
+        return {term: "foo", results: [{definitions: ["foo definition 1", "foo definition 2"]}]}
+      }
+
+      if (selector.key.includes("withDictionaries")) {
+        return ["dictionary 1", "dictionary 2"]
       }
 
       return null
@@ -46,8 +54,8 @@ describe("Glossary", () => {
 
     expect(queryByText("←")).toBeInTheDocument()
     expect(queryByText("foo")).toBeInTheDocument()
-    expect(queryByText("definition 1")).toBeInTheDocument()
-    expect(queryByText("definition 2")).toBeInTheDocument()
+    expect(queryByText(/definition 1/)).toBeInTheDocument()
+    expect(queryByText(/definition 2/)).toBeInTheDocument()
   })
 
   test("it renders main glossary view in list view", () => {
@@ -55,12 +63,14 @@ describe("Glossary", () => {
 
     const {queryByText} = render(<Glossary />)
 
+    expect(queryByText("dictionary 1")).toBeInTheDocument()
     expect(queryByText("foo")).toBeInTheDocument()
-    expect(queryByText("foo definition 1")).toBeInTheDocument()
-    expect(queryByText("foo definition 2")).toBeInTheDocument()
+    expect(queryByText(/foo definition 1/)).toBeInTheDocument()
+    expect(queryByText(/foo definition 2/)).toBeInTheDocument()
 
+    expect(queryByText("dictionary 2")).toBeInTheDocument()
     expect(queryByText("bar")).toBeInTheDocument()
-    expect(queryByText("bar definition 1")).toBeInTheDocument()
-    expect(queryByText("bar definition 2")).toBeInTheDocument()
+    expect(queryByText(/bar definition 1/)).toBeInTheDocument()
+    expect(queryByText(/bar definition 2/)).toBeInTheDocument()
   })
 })
