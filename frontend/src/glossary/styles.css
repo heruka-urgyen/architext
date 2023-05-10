@@ -3,6 +3,7 @@
   overflow-y: auto;
 }
 
+.dictionaries,
 .dictionary-definition-list,
 .definition-list {
   list-style: none;
