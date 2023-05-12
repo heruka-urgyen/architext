@@ -1,10 +1,7 @@
 import {Suspense, useState} from "react"
 import {useRecoilValue} from "recoil"
 
-import {
-  withGlossary,
-  withSearchTerm,
-} from "../states/glossary"
+import {withGlossary, withSearchTerm} from "../states/glossary"
 import {Maybe} from "../ui/Maybe"
 
 import {DefinitionList} from "./ui/DefinitionList"
@@ -22,20 +19,21 @@ function GlossaryData() {
       then={
         <DetailedDefinition
           term={searchTerm.term}
-          definitions={searchTerm.results}
+          entries={searchTerm.results}
           goBack={_ => setCurrentSearchTerm(null)}
         />
       }
       else={
-        <Maybe
-          if={entries.length > 0}
-          then={
-            <DefinitionList
-              entries={entries}
-              handleTitleClick={setCurrentSearchTerm}
-            />
-          }
-        />
+        <ul className="dictionary-definition-list">
+          {entries.map(entry => (
+            <li key={entry.dictionary}>
+              <DefinitionList
+                entry={entry}
+                handleTitleClick={setCurrentSearchTerm}
+              />
+            </li>
+          ))}
+        </ul>
       }
     />
   )
@@ -49,7 +47,7 @@ function Glossary() {
       </Suspense>
       <Suspense fallback={null}>
         <GlossaryData />
-    </Suspense>
+      </Suspense>
     </div>
   )
 }

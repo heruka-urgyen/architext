@@ -10,15 +10,19 @@ import {DefinitionList} from "../DefinitionList"
 
 describe("DefinitionList", () => {
   test("matches snapshot", () => {
-    const entries = [
-      {dictionary: "a", definitions: ["term 1", "def 1-1", "def 1-2"]},
-      {dictionary: "b", definitions: ["term 2", "def 2-1", "def 2-2"]},
+    const definitions = [
+      [
+        [
+          {type: "definition", token: "def"},
+          {type: "none", token: "1"},
+        ],
+      ],
     ]
-
+    const entry = {dictionary: "a", definitions: [["term 1", definitions]]}
     const handleTitleClick = jest.fn(_ => _)
 
     const screen = render(
-      <DefinitionList entries={entries} handleTitleClick={handleTitleClick} />,
+      <DefinitionList entry={entry} handleTitleClick={handleTitleClick} />,
     )
 
     expect(screen).toMatchSnapshot()

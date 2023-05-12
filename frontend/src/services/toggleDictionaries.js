@@ -1,6 +1,6 @@
 import {dictionarySelectorEndpoint} from "./endpoints"
 
-export const selectDictionaries = args => (
+export const selectDictionaries = args =>
   fetch(`${dictionarySelectorEndpoint}`, {
     method: "post",
     mode: "cors",
@@ -10,4 +10,3 @@ export const selectDictionaries = args => (
     referrerPolicy: "no-referrer",
     body: JSON.stringify(args),
   }).then(x => x.json())
-)

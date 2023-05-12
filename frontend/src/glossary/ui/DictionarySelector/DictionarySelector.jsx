@@ -1,7 +1,5 @@
 import {useState} from "react"
-import {
-  useRecoilValue, useRecoilCallback,
-} from "recoil"
+import {useRecoilValue, useRecoilCallback} from "recoil"
 import {Maybe} from "../../../ui/Maybe"
 import {withDictionaries} from "../../../states/glossary"
 import {selectDictionaries as sd} from "../../../services/toggleDictionaries"
@@ -36,7 +34,10 @@ function DictionarySelector() {
       <Maybe
         if={dictionaries.length > 0}
         then={
-          <button onClick={_ => toggleSelectorVisible(s => !s)} style={{height: "30px"}}>
+          <button
+            onClick={_ => toggleSelectorVisible(s => !s)}
+            style={{height: "30px"}}
+          >
             Select dictionaries
           </button>
         }
@@ -44,13 +45,15 @@ function DictionarySelector() {
       <Maybe
         if={selectorVisible}
         then={
-          <ul style={{listStyle: "none"}}>
+          <ul className="dictionaries">
             {dictionaries.map(({name, selected}) => (
               <li key={name}>
                 <Checkbox
                   value={name}
                   checked={selected}
-                  onChange={_ => selectDictionaries({name, selected: !selected})}
+                  onChange={_ =>
+                    selectDictionaries({name, selected: !selected})
+                  }
                 />
               </li>
             ))}

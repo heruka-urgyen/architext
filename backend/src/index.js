@@ -73,20 +73,54 @@ const initializeDictionaryStore = async () => {
   }))
 }
 
+function splitDefinition(definition, dictionaryName) {
+  const defTokens = /[a-zA-Z]/
+
+  return definition
+    .replaceAll(/(\d\.)/g, (_, x) => ` ${x} `)
+    .replaceAll(/\.\s\.\s\./g, '...')
+    .replaceAll(/\(/g, ' (')
+    .replaceAll(/\]/g, '] ')
+    .replaceAll(/\,/g, ', ')
+    .replaceAll(/\=/g, '= ')
+    .replaceAll(/\//g, '/ ')
+    .split(/\s/)
+    .map(word => {
+      return word
+        .replaceAll(/\/\s?/g, " / ")
+        .replaceAll(/\./g, " . ")
+        .replaceAll(/\,/g, " , ")
+        .replaceAll(/\;/g, " ; ")
+        .replaceAll(/\[/g, " [ ")
+        .replaceAll(/\]/g, " ] ")
+        .replaceAll(/\(/g, " ( ")
+        .replaceAll(/\)/g, " ) ")
+        .replaceAll(/\{/g, " { ")
+        .replaceAll(/\}/g, " } ")
+        .replaceAll(/</g, " < ")
+        .replaceAll(/>/g, " > ")
+        .split(/\s/)
+        .filter(x => x !== "")
+        .map(token => {
+          if (defTokens.test(token)) {
+            return {token, type: "definition"}
+          }
+
+          return {token, type: "none"}
+        })
+    })
+}
+
 function getDefinitions(dictionary, terms) {
-  if (Array.isArray(terms)) {
-    return terms.reduce((acc, term) => {
-      const definitions = dictionary.content.get(term)
+  return terms.reduce((acc, term) => {
+    const definitions = dictionary.content.get(term)
 
-      if (definitions != null) {
-        acc.push([term, definitions])
-      }
+    if (definitions != null) {
+      acc.push([term, definitions.map(definition => splitDefinition(definition, dictionary.filename))])
+    }
 
-      return acc
-    }, [])
-  }
-
-  return dictionary.content.get(terms)
+    return acc
+  }, [])
 }
 
 function findInSelectedDictionaries(terms) {
@@ -96,7 +130,7 @@ function findInSelectedDictionaries(terms) {
     if (d.enabled) {
       result.push({
         dictionary: d.filename,
-        definitions: getDefinitions(d, terms)
+        definitions: getDefinitions(d, terms),
       })
     }
   }
@@ -205,7 +239,7 @@ fastify.route({
   },
   handler: async (request, reply) => {
     const {params: {term}} = request
-    const results = findInSelectedDictionaries(term)
+    const results = findInSelectedDictionaries([term])
 
     reply.send({
       term,

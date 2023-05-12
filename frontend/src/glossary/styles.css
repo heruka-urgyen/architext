@@ -3,13 +3,25 @@
   overflow-y: auto;
 }
 
-.term:not(:last-child) {
-  margin-right: 0.5rem;
+.dictionaries,
+.dictionary-definition-list,
+.definition-list {
+  list-style: none;
+  padding: 0;
+}
+
+.terms p {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .term.searchable {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.space {
+  white-space: pre;
 }
 
 .back-arrow {
